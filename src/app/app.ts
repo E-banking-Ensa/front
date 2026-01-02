@@ -4,7 +4,7 @@ import { Component, signal } from '@angular/core';
   selector: 'app-root',
   templateUrl: './app.html',
   standalone: false,
-  styleUrl: './app.css'
+  styleUrls: ['./app.css'] // Correction ici
 })
 export class App {
   protected readonly title = signal('front');

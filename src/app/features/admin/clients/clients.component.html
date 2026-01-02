@@ -1,0 +1,359 @@
+<div class="page-container">
+  <!-- En-tête -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Gestion des clients</h1>
+      <p>Consulter et gérer les clients de la plateforme</p>
+    </div>
+  </div>
+
+  <!-- Statistiques -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <div class="stat-icon" style="background:#e0e7ff;color:#4338ca;">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ totalClients }}</div>
+        <div class="stat-label">Total clients</div>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon" style="background:#d1fae5;color:#065f46;">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ clientsActifs }}</div>
+        <div class="stat-label">Clients actifs</div>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon" style="background:#dbeafe;color:#1e40af;">
+        <mat-icon>hourglass_top</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ kycEnCours }}</div>
+        <div class="stat-label">KYC en cours</div>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon" style="background:#ecfeff;color:#0f766e;">
+        <mat-icon>account_balance_wallet</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">
+          {{ soldeTotalGlobal | number:'1.2-2' }} €
+        </div>
+        <div class="stat-label">Solde global</div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Filtres -->
+  <mat-card class="filter-card">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Rechercher un client</mat-label>
+      <input matInput placeholder="Nom, email ou téléphone">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </mat-card>
+
+  <!-- Tableau -->
+  <mat-card class="table-card">
+    <table mat-table [dataSource]="clients" class="clients-table">
+<!--      &lt;!&ndash; ID &ndash;&gt;-->
+<!--      <ng-container matColumnDef="id">-->
+<!--        <th mat-header-cell *matHeaderCellDef>ID</th>-->
+<!--        <td mat-cell *matCellDef="let client">{{ client.id }}</td>-->
+<!--      </ng-container>-->
+
+      <!-- Nom -->
+      <ng-container matColumnDef="nom">
+        <th mat-header-cell *matHeaderCellDef>Client</th>
+        <td mat-cell *matCellDef="let client">
+          <div class="client-info">
+            <div class="avatar">{{ client.nom.charAt(0) }}</div>
+            <div>
+              <div class="client-name">{{ client.nom }}</div>
+              <div class="client-date">Inscrit le {{ client.dateInscription | date:'dd/MM/yyyy' }}</div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Email -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let client">{{ client.email }}</td>
+      </ng-container>
+
+      <!-- Téléphone -->
+      <ng-container matColumnDef="telephone">
+        <th mat-header-cell *matHeaderCellDef>Téléphone</th>
+        <td mat-cell *matCellDef="let client">{{ client.telephone }}</td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Statut</th>
+        <td mat-cell *matCellDef="let client">
+          <mat-chip
+            [ngClass]="{
+              'status-actif': client.status === 'actif',
+              'status-attente': client.status === 'en_attente',
+              'status-suspendu': client.status === 'suspendu'
+            }">
+            <mat-icon>
+              {{ client.status === 'actif' ? 'check' :
+              client.status === 'en_attente' ? 'schedule' : 'block' }}
+            </mat-icon>
+            {{ client.status }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- KYC -->
+      <ng-container matColumnDef="kycStatus">
+        <th mat-header-cell *matHeaderCellDef>KYC</th>
+        <td mat-cell *matCellDef="let client">
+          <mat-chip
+            [ngClass]="{
+              'kyc-valide': client.kycStatus === 'validé',
+              'kyc-encours': client.kycStatus === 'en_cours',
+              'kyc-refuse': client.kycStatus === 'refusé'
+            }">
+            {{ client.kycStatus }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Comptes -->
+      <ng-container matColumnDef="comptes">
+        <th mat-header-cell *matHeaderCellDef>Comptes</th>
+        <td mat-cell *matCellDef="let client"><span class="comptes-badge">{{ client.comptes }}</span></td>
+      </ng-container>
+
+      <!-- Solde -->
+      <ng-container matColumnDef="soldeTotal">
+        <th mat-header-cell *matHeaderCellDef>Solde</th>
+        <td mat-cell *matCellDef="let client" class="solde">{{ client.soldeTotal | number:'1.2-2' }} €</td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let client">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onViewDetails(client)">
+              <mat-icon>visibility</mat-icon> Voir détails
+            </button>
+            <button mat-menu-item (click)="onEdit(client)">
+              <mat-icon>edit</mat-icon> Modifier
+            </button>
+            <button mat-menu-item class="warning-action" (click)="onSuspend(client)">
+              <mat-icon>block</mat-icon> Suspendre
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card>
+</div>
+
+
+
+
+<!--<div class="page-container">-->
+
+<!--  &lt;!&ndash; En-tête &ndash;&gt;-->
+<!--  <div class="page-header">-->
+<!--    <div class="header-content">-->
+<!--      <h1>Gestion des clients</h1>-->
+<!--      <p>Consulter et gérer les clients de la plateforme</p>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Statistiques &ndash;&gt;-->
+<!--  <div class="stats-grid">-->
+<!--    <mat-card class="stat-card">-->
+<!--      <div class="stat-icon" style="background:#e0e7ff;color:#4338ca;">-->
+<!--        <mat-icon>people</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">{{ totalClients }}</div>-->
+<!--        <div class="stat-label">Total clients</div>-->
+<!--      </div>-->
+<!--    </mat-card>-->
+
+<!--    <mat-card class="stat-card">-->
+<!--      <div class="stat-icon" style="background:#d1fae5;color:#065f46;">-->
+<!--        <mat-icon>check_circle</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">{{ clientsActifs }}</div>-->
+<!--        <div class="stat-label">Clients actifs</div>-->
+<!--      </div>-->
+<!--    </mat-card>-->
+
+<!--    <mat-card class="stat-card">-->
+<!--      <div class="stat-icon" style="background:#dbeafe;color:#1e40af;">-->
+<!--        <mat-icon>hourglass_top</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">{{ kycEnCours }}</div>-->
+<!--        <div class="stat-label">KYC en cours</div>-->
+<!--      </div>-->
+<!--    </mat-card>-->
+
+<!--    <mat-card class="stat-card">-->
+<!--      <div class="stat-icon" style="background:#ecfeff;color:#0f766e;">-->
+<!--        <mat-icon>account_balance_wallet</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">-->
+<!--          {{ soldeTotalGlobal | number:'1.2-2' }} €-->
+<!--        </div>-->
+<!--        <div class="stat-label">Solde global</div>-->
+<!--      </div>-->
+<!--    </mat-card>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Filtres &ndash;&gt;-->
+<!--  <mat-card class="filter-card">-->
+<!--    <mat-form-field appearance="outline" class="search-field">-->
+<!--      <mat-label>Rechercher un client</mat-label>-->
+<!--      <input matInput placeholder="Nom, email ou téléphone">-->
+<!--      <mat-icon matSuffix>search</mat-icon>-->
+<!--    </mat-form-field>-->
+<!--  </mat-card>-->
+
+<!--  &lt;!&ndash; Tableau &ndash;&gt;-->
+<!--  <mat-card class="table-card">-->
+<!--    <table mat-table [dataSource]="clients" class="clients-table">-->
+
+<!--      &lt;!&ndash; ID &ndash;&gt;-->
+<!--      <ng-container matColumnDef="id">-->
+<!--        <th mat-header-cell *matHeaderCellDef>ID</th>-->
+<!--        <td mat-cell *matCellDef="let client">{{ client.id }}</td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Client &ndash;&gt;-->
+<!--      <ng-container matColumnDef="nom">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Client</th>-->
+<!--        <td mat-cell *matCellDef="let client">-->
+<!--          <div class="client-info">-->
+<!--            <div class="avatar">-->
+<!--              {{ client.nom.charAt(0) }}-->
+<!--            </div>-->
+<!--            <div>-->
+<!--              <div class="client-name">{{ client.nom }}</div>-->
+<!--              <div class="client-date">-->
+<!--                Inscrit le {{ client.dateInscription | date:'dd/MM/yyyy' }}-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Email &ndash;&gt;-->
+<!--      <ng-container matColumnDef="email">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Email</th>-->
+<!--        <td mat-cell *matCellDef="let client">{{ client.email }}</td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Téléphone &ndash;&gt;-->
+<!--      <ng-container matColumnDef="telephone">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Téléphone</th>-->
+<!--        <td mat-cell *matCellDef="let client">{{ client.telephone }}</td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Statut &ndash;&gt;-->
+<!--      <ng-container matColumnDef="status">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Statut</th>-->
+<!--        <td mat-cell *matCellDef="let client">-->
+<!--          <mat-chip-->
+<!--            [ngClass]="{-->
+<!--              'status-actif': client.status === 'actif',-->
+<!--              'status-attente': client.status === 'en_attente',-->
+<!--              'status-suspendu': client.status === 'suspendu'-->
+<!--            }">-->
+<!--            <mat-icon>-->
+<!--              {{ client.status === 'actif' ? 'check' :-->
+<!--              client.status === 'en_attente' ? 'schedule' : 'block' }}-->
+<!--            </mat-icon>-->
+<!--            {{ client.status }}-->
+<!--          </mat-chip>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; KYC &ndash;&gt;-->
+<!--      <ng-container matColumnDef="kycStatus">-->
+<!--        <th mat-header-cell *matHeaderCellDef>KYC</th>-->
+<!--        <td mat-cell *matCellDef="let client">-->
+<!--          <mat-chip-->
+<!--            [ngClass]="{-->
+<!--              'kyc-valide': client.kycStatus === 'validé',-->
+<!--              'kyc-encours': client.kycStatus === 'en_cours',-->
+<!--              'kyc-refuse': client.kycStatus === 'refusé'-->
+<!--            }">-->
+<!--            {{ client.kycStatus }}-->
+<!--          </mat-chip>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Comptes &ndash;&gt;-->
+<!--      <ng-container matColumnDef="comptes">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Comptes</th>-->
+<!--        <td mat-cell *matCellDef="let client">-->
+<!--          <span class="comptes-badge">{{ client.comptes }}</span>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Solde &ndash;&gt;-->
+<!--      <ng-container matColumnDef="soldeTotal">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Solde</th>-->
+<!--        <td mat-cell *matCellDef="let client" class="solde">-->
+<!--          {{ client.soldeTotal | number:'1.2-2' }} €-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Actions &ndash;&gt;-->
+<!--      <ng-container matColumnDef="actions">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Actions</th>-->
+<!--        <td mat-cell *matCellDef="let client">-->
+<!--          <button mat-icon-button [matMenuTriggerFor]="menu">-->
+<!--            <mat-icon>more_vert</mat-icon>-->
+<!--          </button>-->
+
+<!--          <mat-menu #menu="matMenu">-->
+<!--            <button mat-menu-item (click)="onViewDetails(client)">-->
+<!--              <mat-icon>visibility</mat-icon>-->
+<!--              Voir détails-->
+<!--            </button>-->
+<!--            <button mat-menu-item (click)="onEdit(client)">-->
+<!--              <mat-icon>edit</mat-icon>-->
+<!--              Modifier-->
+<!--            </button>-->
+<!--            <button mat-menu-item class="warning-action" (click)="onSuspend(client)">-->
+<!--              <mat-icon>block</mat-icon>-->
+<!--              Suspendre-->
+<!--            </button>-->
+<!--          </mat-menu>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+<!--      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>-->
+<!--    </table>-->
+<!--  </mat-card>-->
+
+<!--</div>-->

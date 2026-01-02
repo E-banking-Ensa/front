@@ -1,0 +1,61 @@
+<div class="dashboard-grid" *ngIf="!loading; else loadingTpl">
+
+  <mat-card class="stat-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>supervisor_account</mat-icon>
+        Agents
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <h2>{{ stats.agents }}</h2>
+      <p>Agents actifs dans le système</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>people</mat-icon>
+        Clients
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <h2>{{ stats.clients }}</h2>
+      <p>Clients inscrits</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>assignment_turned_in</mat-icon>
+        Consents
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <h2>{{ stats.consents }}</h2>
+      <p>Consents actifs</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>account_balance</mat-icon>
+        Comptes
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <h2>{{ stats.comptes }}</h2>
+      <p>Comptes bancaires créés</p>
+    </mat-card-content>
+  </mat-card>
+
+</div>
+
+<ng-template #loadingTpl>
+  <p style="text-align:center; margin-top: 40px;">
+    Chargement des statistiques...
+  </p>
+</ng-template>

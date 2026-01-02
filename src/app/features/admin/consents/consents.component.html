@@ -1,0 +1,434 @@
+<mat-card class="consent-card">
+  <div class="card-header">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-title">Actifs</div>
+        <div class="stat-value">{{ activeCount }}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">Inactifs</div>
+        <div class="stat-value">{{ inactiveCount }}</div>
+      </div>
+    </div>
+
+    <button mat-raised-button color="primary" class="add-button" (click)="createConsentType()">
+      <mat-icon>add</mat-icon>
+      Ajouter Consentement
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="consentTypes" class="consents-table mat-elevation-z2">
+
+      <!-- Code Column -->
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef>Code</th>
+        <td mat-cell *matCellDef="let type">{{ type.code }}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nom</th>
+        <td mat-cell *matCellDef="let type">{{ type.name }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="isActive">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let type">
+          <mat-chip [color]="type.isActive ? 'primary' : 'warn'" selected>
+            {{ type.isActive ? 'Actif' : 'Inactif' }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Nombre Column -->
+      <ng-container matColumnDef="nbr">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let type">{{ type.nbr }}</td>
+      </ng-container>
+
+      <!-- Créé le Column -->
+      <ng-container matColumnDef="grantedAt">
+        <th mat-header-cell *matHeaderCellDef>Créé le</th>
+        <td mat-cell *matCellDef="let type">{{ type.grantedAt | date:'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <!-- Mis à jour le Column -->
+      <ng-container matColumnDef="updatedAt">
+        <th mat-header-cell *matHeaderCellDef>Mis à jour le</th>
+        <td mat-cell *matCellDef="let type">{{ type.updatedAt | date:'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let type">
+          <button mat-button color="primary" *ngIf="!type.isActive" (click)="activate(type)">Activer</button>
+          <button mat-button color="warn" *ngIf="type.isActive" (click)="deactivate(type)">Désactiver</button>
+          <button mat-button color="accent" (click)="delete(type)">Supprimer</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['code','name','isActive','nbr','grantedAt','updatedAt','actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['code','name','isActive','nbr','grantedAt','updatedAt','actions']"></tr>
+    </table>
+  </div>
+</mat-card>
+
+
+
+<!--<mat-card class="table-card">-->
+<!--  <div class="stats">-->
+<!--    <div class="stat">-->
+<!--      <div class="stat-title">Actifs</div>-->
+<!--      <div class="stat-value">{{ activeCount }}</div>-->
+<!--    </div>-->
+<!--    <div class="stat">-->
+<!--      <div class="stat-title">Inactifs</div>-->
+<!--      <div class="stat-value">{{ inactiveCount }}</div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <button mat-raised-button color="primary" (click)="createConsentType()">-->
+<!--    <mat-icon>add</mat-icon> Ajouter Consentement-->
+<!--  </button>-->
+
+<!--  <table mat-table [dataSource]="consentTypes" class="mat-elevation-z8">-->
+
+<!--    &lt;!&ndash; Code Column &ndash;&gt;-->
+<!--    <ng-container matColumnDef="code">-->
+<!--      <th mat-header-cell *matHeaderCellDef>Code</th>-->
+<!--      <td mat-cell *matCellDef="let type">{{ type.code }}</td>-->
+<!--    </ng-container>-->
+
+<!--    &lt;!&ndash; Status Column &ndash;&gt;-->
+<!--    <ng-container matColumnDef="isActive">-->
+<!--      <th mat-header-cell *matHeaderCellDef>Status</th>-->
+<!--      <td mat-cell *matCellDef="let type">-->
+<!--        <mat-chip [color]="type.isActive ? 'primary' : 'warn'" selected>-->
+<!--          {{ type.isActive ? 'Actif' : 'Inactif' }}-->
+<!--        </mat-chip>-->
+<!--      </td>-->
+<!--    </ng-container>-->
+
+<!--    &lt;!&ndash; Nombre Column &ndash;&gt;-->
+<!--    <ng-container matColumnDef="nbr">-->
+<!--      <th mat-header-cell *matHeaderCellDef>Nombre</th>-->
+<!--      <td mat-cell *matCellDef="let type">{{ type.nbr }}</td>-->
+<!--    </ng-container>-->
+
+<!--    &lt;!&ndash; Créé le Column &ndash;&gt;-->
+<!--    <ng-container matColumnDef="grantedAt">-->
+<!--      <th mat-header-cell *matHeaderCellDef>Créé le</th>-->
+<!--      <td mat-cell *matCellDef="let type">{{ type.grantedAt | date:'dd/MM/yyyy' }}</td>-->
+<!--    </ng-container>-->
+
+<!--    &lt;!&ndash; Mis à jour le Column &ndash;&gt;-->
+<!--    <ng-container matColumnDef="updatedAt">-->
+<!--      <th mat-header-cell *matHeaderCellDef>Mis à jour le</th>-->
+<!--      <td mat-cell *matCellDef="let type">{{ type.updatedAt | date:'dd/MM/yyyy' }}</td>-->
+<!--    </ng-container>-->
+
+<!--    &lt;!&ndash; Actions Column &ndash;&gt;-->
+<!--    <ng-container matColumnDef="actions">-->
+<!--      <th mat-header-cell *matHeaderCellDef>Actions</th>-->
+<!--      <td mat-cell *matCellDef="let type">-->
+<!--        <button mat-button color="primary" *ngIf="!type.isActive" (click)="activate(type)">Activer</button>-->
+<!--        <button mat-button color="warn" *ngIf="type.isActive" (click)="deactivate(type)">Désactiver</button>-->
+<!--        <button mat-button color="accent" (click)="delete(type)">Supprimer</button>-->
+<!--      </td>-->
+<!--    </ng-container>-->
+
+<!--    <tr mat-header-row *matHeaderRowDef="['code','isActive','nbr','grantedAt','updatedAt','actions']"></tr>-->
+<!--    <tr mat-row *matRowDef="let row; columns: ['code','isActive','nbr','grantedAt','updatedAt','actions']"></tr>-->
+<!--  </table>-->
+<!--</mat-card>-->
+
+
+
+<!--<div class="page-container">-->
+<!--  &lt;!&ndash; HEADER &ndash;&gt;-->
+<!--  <div class="page-header">-->
+<!--    <div class="header-content">-->
+<!--      <h1>Types de Consents</h1>-->
+<!--      <p>Liste des types de consents et leur statut</p>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; STATS &ndash;&gt;-->
+<!--  <div class="stats-grid">-->
+<!--    <div class="stat-card">-->
+<!--      <div class="stat-icon">-->
+<!--        <mat-icon>list_alt</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">{{ totalConsents }}</div>-->
+<!--        <div class="stat-label">Total</div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="stat-card">-->
+<!--      <div class="stat-icon">-->
+<!--        <mat-icon>check_circle</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">{{ consentsActifs }}</div>-->
+<!--        <div class="stat-label">Actifs</div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="stat-card">-->
+<!--      <div class="stat-icon">-->
+<!--        <mat-icon>block</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">{{ consentsInactifs }}</div>-->
+<!--        <div class="stat-label">Inactifs</div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; TABLE &ndash;&gt;-->
+<!--  <mat-card class="table-card">-->
+<!--    <table mat-table [dataSource]="consents" class="consents-table mat-elevation-z1">-->
+
+<!--      &lt;!&ndash; Consent Type ID &ndash;&gt;-->
+<!--      <ng-container matColumnDef="consentTypeId">-->
+<!--        <th mat-header-cell *matHeaderCellDef>ID</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <span class="consent-id">{{ consent.consentTypeId }}</span>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Code &ndash;&gt;-->
+<!--      <ng-container matColumnDef="code">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Code</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <mat-chip [color]="consent.isActive ? 'primary' : 'warn'">{{ consent.code }}</mat-chip>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; isActive &ndash;&gt;-->
+<!--      <ng-container matColumnDef="isActive">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Status</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <mat-chip [color]="consent.isActive ? 'primary' : 'warn'">-->
+<!--            {{ consent.isActive ? 'Actif' : 'Inactif' }}-->
+<!--          </mat-chip>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Nombre &ndash;&gt;-->
+<!--      <ng-container matColumnDef="nbr">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Nombre</th>-->
+<!--        <td mat-cell *matCellDef="let consent">{{ consent.nbr }}</td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; GrantedAt &ndash;&gt;-->
+<!--      <ng-container matColumnDef="grantedAt">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Accordé le</th>-->
+<!--        <td mat-cell *matCellDef="let consent">{{ consent.grantedAt | date:'dd/MM/yyyy' }}</td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; UpdatedAt &ndash;&gt;-->
+<!--      <ng-container matColumnDef="updatedAt">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Mis à jour le</th>-->
+<!--        <td mat-cell *matCellDef="let consent">{{ consent.updatedAt | date:'dd/MM/yyyy' }}</td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Actions &ndash;&gt;-->
+<!--      <ng-container matColumnDef="actions">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Actions</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <button mat-icon-button color="primary" (click)="onViewDetails(consent)" matTooltip="Voir détails">-->
+<!--            <mat-icon>visibility</mat-icon>-->
+<!--          </button>-->
+<!--          <button mat-icon-button color="accent" (click)="onToggleStatus(consent)" matTooltip="Changer statut">-->
+<!--            <mat-icon>{{ consent.isActive ? 'block' : 'check' }}</mat-icon>-->
+<!--          </button>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Header & Row &ndash;&gt;-->
+<!--      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+<!--      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>-->
+
+<!--    </table>-->
+<!--  </mat-card>-->
+<!--</div>-->
+
+
+
+<!--<div class="page-container">-->
+<!--  &lt;!&ndash; HEADER &ndash;&gt;-->
+<!--  <div class="page-header">-->
+<!--    <div class="header-content">-->
+<!--      <h1>Consents des Clients</h1>-->
+<!--      <p>Liste des autorisations et leur statut</p>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; STATS &ndash;&gt;-->
+<!--  <div class="stats-grid">-->
+<!--    <div class="stat-card">-->
+<!--      <div class="stat-icon">-->
+<!--        <mat-icon>list_alt</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">{{ totalConsents }}</div>-->
+<!--        <div class="stat-label">Total Consents</div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="stat-card">-->
+<!--      <div class="stat-icon">-->
+<!--        <mat-icon>check_circle</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">{{ consentsActifs }}</div>-->
+<!--        <div class="stat-label">Actifs</div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="stat-card">-->
+<!--      <div class="stat-icon">-->
+<!--        <mat-icon>hourglass_disabled</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">{{ consentsExpires }}</div>-->
+<!--        <div class="stat-label">Expirés</div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="stat-card">-->
+<!--      <div class="stat-icon">-->
+<!--        <mat-icon>pending</mat-icon>-->
+<!--      </div>-->
+<!--      <div class="stat-content">-->
+<!--        <div class="stat-value">{{ consentsEnAttente }}</div>-->
+<!--        <div class="stat-label">En attente</div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; TABLE &ndash;&gt;-->
+<!--  <mat-card class="table-card">-->
+<!--    <table mat-table [dataSource]="consents" class="consents-table mat-elevation-z1">-->
+
+<!--      &lt;!&ndash; ID &ndash;&gt;-->
+<!--      <ng-container matColumnDef="id">-->
+<!--        <th mat-header-cell *matHeaderCellDef>ID</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <span class="consent-id">{{ consent.id }}</span>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Client &ndash;&gt;-->
+<!--      <ng-container matColumnDef="clientNom">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Client</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <div class="client-info">-->
+<!--            <div class="avatar">{{ consent.clientNom.charAt(0) }}</div>-->
+<!--            <span>{{ consent.clientNom }}</span>-->
+<!--          </div>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Provider &ndash;&gt;-->
+<!--      <ng-container matColumnDef="serviceProvider">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Fournisseur</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <div class="provider-info">-->
+<!--            <mat-icon>account_circle</mat-icon>-->
+<!--            <span>{{ consent.serviceProvider }}</span>-->
+<!--          </div>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Type &ndash;&gt;-->
+<!--      <ng-container matColumnDef="type">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Type</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <mat-chip [ngClass]="{-->
+<!--            'type-ais': consent.type === 'AIS',-->
+<!--            'type-pis': consent.type === 'PIS',-->
+<!--            'type-aisp': consent.type === 'AISP'-->
+<!--          }">{{ consent.type }}</mat-chip>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Status &ndash;&gt;-->
+<!--      <ng-container matColumnDef="status">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Status</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <mat-chip [ngClass]="{-->
+<!--            'status-actif': consent.status === 'actif',-->
+<!--            'status-expire': consent.status === 'expiré',-->
+<!--            'status-revoque': consent.status === 'révoqué',-->
+<!--            'status-attente': consent.status === 'en_attente'-->
+<!--          }">{{ consent.status }}</mat-chip>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Date Creation &ndash;&gt;-->
+<!--      <ng-container matColumnDef="dateCreation">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Création</th>-->
+<!--        <td mat-cell *matCellDef="let consent">{{ consent.dateCreation | date:'dd/MM/yyyy' }}</td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Date Expiration &ndash;&gt;-->
+<!--      <ng-container matColumnDef="dateExpiration">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Expiration</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <div class="expiration-info">-->
+<!--            <mat-progress-bar-->
+<!--              mode="determinate"-->
+<!--              [value]="getExpirationPercentage(consent.dateCreation, consent.dateExpiration)"-->
+<!--              [color]="consent.status === 'expiré' ? 'warn' : 'primary'">-->
+<!--            </mat-progress-bar>-->
+<!--            <div class="days-remaining"-->
+<!--                 [ngClass]="{-->
+<!--                'warning': getDaysRemaining(consent.dateExpiration) <= 15 && consent.status === 'actif',-->
+<!--                'expired': consent.status === 'expiré'-->
+<!--              }">-->
+<!--              {{ getDaysRemaining(consent.dateExpiration) >= 0 ? getDaysRemaining(consent.dateExpiration) + ' jours restants' : 'Expiré' }}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Dernière Utilisation &ndash;&gt;-->
+<!--      <ng-container matColumnDef="derniereUtilisation">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Dernière Utilisation</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <span *ngIf="consent.derniereUtilisation; else noUsage" class="last-used">-->
+<!--            {{ consent.derniereUtilisation | date:'dd/MM/yyyy' }}-->
+<!--          </span>-->
+<!--          <ng-template #noUsage>-->
+<!--            <span class="no-usage">Jamais utilisé</span>-->
+<!--          </ng-template>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Actions &ndash;&gt;-->
+<!--      <ng-container matColumnDef="actions">-->
+<!--        <th mat-header-cell *matHeaderCellDef>Actions</th>-->
+<!--        <td mat-cell *matCellDef="let consent">-->
+<!--          <button mat-icon-button color="primary" (click)="onViewDetails(consent)" matTooltip="Voir détails">-->
+<!--            <mat-icon>visibility</mat-icon>-->
+<!--          </button>-->
+<!--          <button mat-icon-button class="revoke-action" (click)="onRevoke(consent)" matTooltip="Révoquer">-->
+<!--            <mat-icon>block</mat-icon>-->
+<!--          </button>-->
+<!--          <button mat-icon-button color="accent" (click)="onRenew(consent)" matTooltip="Renouveler">-->
+<!--            <mat-icon>autorenew</mat-icon>-->
+<!--          </button>-->
+<!--          <button mat-icon-button color="warn" (click)="onApprove(consent)" matTooltip="Approuver">-->
+<!--            <mat-icon>check</mat-icon>-->
+<!--          </button>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+
+<!--      &lt;!&ndash; Header & Row &ndash;&gt;-->
+<!--      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+<!--      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>-->
+
+<!--    </table>-->
+<!--  </mat-card>-->
+<!--</div>-->
