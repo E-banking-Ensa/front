@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,13 +12,14 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ClientService } from '../../../core/services/client.service';
 import { ClientDto } from '../../../core/models/ClientDto';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 interface Client {
   id: string;
   nom: string;
   email: string;
   telephone: string;
-  status: string;
+  status: string;      // "actif", "en_attente", "suspendu"
   kycStatus: string;
   comptes: number;
   soldeTotal: number;
@@ -39,20 +41,26 @@ interface Client {
     MatFormFieldModule,
     MatInputModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSnackBarModule
   ]
 })
 export class ClientsComponent implements OnInit {
-  displayedColumns: string[] = [ 'nom', 'email', 'telephone', 'status', 'kycStatus', 'comptes', 'soldeTotal', 'actions'];
+  displayedColumns: string[] = ['nom', 'email', 'telephone', 'status', 'kycStatus', 'actions'];
   clients: Client[] = [];
 
-  constructor(private clientService: ClientService,
-              private cd: ChangeDetectorRef) {}
+  constructor(
+    private clientService: ClientService,
+    private cd: ChangeDetectorRef,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadClients();
   }
 
+  // 🔹 Charger tous les clients
   loadClients(): void {
     this.clientService.getAllClients().subscribe({
       next: (data: ClientDto[]) => {
@@ -61,17 +69,17 @@ export class ClientsComponent implements OnInit {
           nom: `${c.firstName} ${c.lastName}`,
           email: c.email,
           telephone: c.phoneNumber,
-          status: c.status,
+          status: c.status,      // doit correspondre aux valeurs backend: "actif", "suspendu", etc.
           kycStatus: c.kycStatus,
-          comptes: 0,      // Ajuster si tu récupères cette info depuis le backend
-          soldeTotal: 0,   // Ajuster si tu récupères cette info depuis le backend
+          comptes: 0,
+          soldeTotal: 0,
           dateInscription: new Date(c.createdAt)
         }));
 
-        // 🔹 Résout NG0100
+        // Résout NG0100
         this.cd.detectChanges();
       },
-      error: (err) => console.error('Erreur récupération clients', err)
+      error: err => console.error('Erreur récupération clients', err)
     });
   }
 
@@ -92,10 +100,36 @@ export class ClientsComponent implements OnInit {
     return this.clients.reduce((sum, c) => sum + c.soldeTotal, 0);
   }
 
-  // Actions
-  onViewDetails(client: Client): void {
-    console.log('Voir détails:', client);
+  // 🔹 Actions via le service
+  activate(client: Client): void {
+    if (!client.id) return;
+
+    this.clientService.activate(client.id).subscribe({
+      next: () => {
+        this.snackBar.open(`Client ${client.nom} activé`, 'Fermer', { duration: 3000 });
+        this.loadClients(); // recharger la liste
+      },
+      error: () => this.snackBar.open('Erreur lors de l’activation', 'Fermer', { duration: 3000 })
+    });
   }
+
+  desactivate(client: Client): void {
+    if (!client.id) return;
+
+    this.clientService.desactivate(client.id).subscribe({
+      next: () => {
+        this.snackBar.open(`Client ${client.nom} désactivé`, 'Fermer', { duration: 3000 });
+        this.loadClients(); // recharger la liste
+      },
+      error: () => this.snackBar.open('Erreur lors de la désactivation', 'Fermer', { duration: 3000 })
+    });
+  }
+
+  // 🔹 Autres actions, 
+  onViewDetails(client: Client): void {
+  if (!client.id) return;
+  this.router.navigate(['/admin/accounts',client.nom, client.id]);
+}
 
   onEdit(client: Client): void {
     console.log('Modifier:', client);

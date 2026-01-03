@@ -1,0 +1,32 @@
+.operator-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.operator-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.amount-btn {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.amount-btn:hover {
+  transform: scale(1.05);
+}
+
+.recharge-btn {
+  transition: all 0.3s ease;
+}
+
+.recharge-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
+}
+
+.recharge-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

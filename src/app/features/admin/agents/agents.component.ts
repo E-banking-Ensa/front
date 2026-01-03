@@ -1,5 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AddAgentDialogComponent } from './add-agent-dialog/add-agent-dialog.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,27 +20,34 @@ import { AgentDto } from '../../../core/models/AgentDto';
   templateUrl: './agents.component.html',
   styleUrls: ['./agents.component.scss'],
   imports: [
-    CommonModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatMenuModule
-  ]
+  CommonModule,
+  MatTableModule,
+  MatButtonModule,
+  MatIconModule,
+  MatChipsModule,
+  MatCardModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatMenuModule,
+
+  // ✅ OBLIGATOIRE
+  MatDialogModule,
+  MatSnackBarModule
+]
+
 })
 export class AgentsComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'agentId', 'nom', 'email', 'phoneNumber', 'adresse', 'status', 'createdAt', 'actions'
+     'fullName', 'email', 'phoneNumber', 'adresse', 'status', 'createdAt', 'actions'
   ];
 
   agents: AgentDto[] = [];
 
   constructor(private agentService: AgentService,
-              private cd: ChangeDetectorRef) {}
+  private cd: ChangeDetectorRef,
+  private dialog: MatDialog,        // AJOUTÉ
+  private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.loadAgents();
@@ -57,21 +67,89 @@ export class AgentsComponent implements OnInit {
     });
   }
 
-  onViewDetails(agent: AgentDto): void {
-    console.log('Voir détails:', agent);
-  }
-
-  onEdit(agent: AgentDto): void {
-    console.log('Modifier agent:', agent);
-  }
-
   onDelete(agent: AgentDto): void {
-    console.log('Supprimer agent:', agent);
-  }
+  if (!agent.agentId) return;
+
+  this.agentService.deleteAgent(agent.agentId).subscribe({
+    next: () => {
+      this.snackBar.open('Agent supprimé avec succès', 'Fermer', {
+        duration: 4000
+      });
+      this.loadAgents();
+    },
+    error: () => {
+      this.snackBar.open('Erreur lors de la suppression', 'Fermer', {
+        duration: 4000
+      });
+    }
+  });
+}
+
+suspendre(agent: AgentDto): void {
+  if (!agent.agentId) return;
+
+  this.agentService.suspendre(agent.agentId).subscribe({
+    next: () => {
+      this.snackBar.open('Agent suspendu', 'Fermer', {
+        duration: 4000
+      });
+      this.loadAgents();
+    },
+    error: () => {
+      this.snackBar.open('Erreur lors de la suspension', 'Fermer', {
+        duration: 4000
+      });
+    }
+  });
+}
+
+activate(agent: AgentDto): void {
+  if (!agent.agentId) return;
+  this.agentService.activate(agent.agentId).subscribe({
+    next: () => {
+      this.snackBar.open('Agent activé', 'Fermer', {
+        duration: 4000
+      });
+      this.loadAgents();
+    },
+    error: () => {
+      this.snackBar.open('Erreur lors de l’activation', 'Fermer', {
+        duration: 4000
+      });
+    }
+  });
+}
+
+desactivate(agent: AgentDto): void {
+  if (!agent.agentId) return;
+
+  this.agentService.desactivate(agent.agentId).subscribe({
+    next: () => {
+      this.snackBar.open('Agent activé', 'Fermer', {
+        duration: 4000
+      });
+      this.loadAgents();
+    },
+    error: () => {
+      this.snackBar.open('Erreur lors de l’activation', 'Fermer', {
+        duration: 4000
+      });
+    }
+  });
+}
 
   addAgent(): void {
-    console.log('Ajouter un nouvel agent');
-  }
+  const dialogRef = this.dialog.open(AddAgentDialogComponent, {
+    width: '600px'
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === true) {
+      this.snackBar.open('Agent créé !', 'Fermer', { duration: 4000 });
+      this.loadAgents();
+    }
+  });
+}
 }
 
 

@@ -1,0 +1,92 @@
+<div class="w-full h-full min-h-screen" [style.background]="bodyBackground">
+  <div class="max-w-4xl mx-auto p-6" [style.font-family]="config.font_family">
+
+    <div class="rounded-2xl shadow-xl p-6 mb-6" [style.background-color]="config.card_color">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="font-bold mb-2" [style.color]="config.text_color" [style.font-size.px]="config.font_size * 1.875">{{ config.page_title }}</h1>
+          <p [style.color]="config.text_color" [style.font-size.px]="config.font_size">{{ config.welcome_message }}</p>
+        </div>
+        <div class="text-5xl">🏦</div>
+      </div>
+    </div>
+
+    <div *ngIf="hasProfile" class="info-card rounded-2xl shadow-xl p-8 mb-6 text-white"
+         [style.background]="'linear-gradient(to right, ' + config.primary_color + ', ' + config.background_color + ')'">
+      <h2 class="font-semibold mb-4 opacity-90" [style.font-size.px]="config.font_size * 1.5">Informations du compte</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <p class="text-sm opacity-75" [style.font-size.px]="config.font_size * 0.875">Numéro de compte</p>
+          <p class="text-2xl font-bold">{{ currentProfile?.account_number || '••••••' }}</p>
+        </div>
+        <div>
+          <p class="text-sm opacity-75" [style.font-size.px]="config.font_size * 0.875">Solde actuel</p>
+          <p class="text-2xl font-bold">€ {{ (currentProfile?.balance || 0).toFixed(2) }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-2xl shadow-xl p-8" [style.background-color]="config.card_color">
+      <h2 class="font-bold mb-6" [style.color]="config.text_color" [style.font-size.px]="config.font_size * 1.5">Modifier mes informations</h2>
+
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-5">
+        <div>
+          <label for="full-name" class="block font-semibold mb-2" [style.color]="config.text_color" [style.font-size.px]="config.font_size * 0.875">Nom complet</label>
+          <input type="text" id="full-name" formControlName="full_name"
+                 class="input-field w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500"
+                 [style.font-size.px]="config.font_size"
+                 placeholder="Entrez votre nom complet">
+        </div>
+
+        <div>
+          <label for="email" class="block font-semibold mb-2" [style.color]="config.text_color" [style.font-size.px]="config.font_size * 0.875">Adresse email</label>
+          <input type="email" id="email" formControlName="email"
+                 class="input-field w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500"
+                 [style.font-size.px]="config.font_size"
+                 placeholder="votre.email@exemple.com">
+        </div>
+
+        <div>
+          <label for="phone" class="block font-semibold mb-2" [style.color]="config.text_color" [style.font-size.px]="config.font_size * 0.875">Numéro de téléphone</label>
+          <input type="tel" id="phone" formControlName="phone"
+                 class="input-field w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500"
+                 [style.font-size.px]="config.font_size"
+                 placeholder="+212 6 80 62 27 93">
+        </div>
+
+        <div>
+          <label for="address" class="block font-semibold mb-2" [style.color]="config.text_color" [style.font-size.px]="config.font_size * 0.875">Adresse postale</label>
+          <textarea id="address" rows="3" formControlName="address"
+                    class="input-field w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500"
+                    [style.font-size.px]="config.font_size"
+                    placeholder="Votre adresse complète"></textarea>
+        </div>
+
+
+
+        <div *ngIf="showStatus" [ngClass]="{'bg-red-100 text-red-700': isError, 'bg-green-100 text-green-700': !isError}"
+             class="p-4 rounded-xl text-sm font-medium">
+          {{ statusMessage }}
+        </div>
+
+        <div class="flex gap-4 pt-4">
+          <button type="submit" [disabled]="isLoading"
+                  class="save-btn flex-1 text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-all"
+                  [style.background-color]="config.accent_color"
+                  [style.font-size.px]="config.font_size">
+            {{ isLoading ? '⏳ Enregistrement...' : '💾 Enregistrer les modifications' }}
+          </button>
+          <button type="button" (click)="onCancel()"
+                  class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-xl transition"
+                  [style.font-size.px]="config.font_size">
+            Annuler
+          </button>
+        </div>
+      </form>
+
+      <div *ngIf="!hasProfile" class="text-center py-8">
+        <p class="text-gray-500 mb-4" [style.font-size.px]="config.font_size">Aucun profil enregistré. Remplissez le formulaire pour créer votre profil.</p>
+      </div>
+    </div>
+  </div>
+</div>

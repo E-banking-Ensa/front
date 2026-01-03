@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import {DashbordService} from '../../../../core/services/dashbord.service';
 import {DashbordAdmin} from '../../../../core/models/DashbordAdmin';
+import { AccountService } from '../../../../core/services/account.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -29,6 +30,7 @@ export class AdminDashboardComponent implements OnInit {
 
   constructor(
     private dashbordService: DashbordService,
+    private accountservice:AccountService,
     private cd: ChangeDetectorRef
   ) {}
 
