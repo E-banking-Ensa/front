@@ -15,4 +15,12 @@ export class ClientService {
   getAllClients(): Observable<ClientDto[]> {
     return this.http.get<ClientDto[]>(`${this.baseUrl}/allClients`);
   }
+
+  desactivate(clientId: string): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/clients/${clientId}/desactivate`, {});
+  }
+
+  activate(clientId: string): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/clients/${clientId}/activate`, {});
+  }
 }
