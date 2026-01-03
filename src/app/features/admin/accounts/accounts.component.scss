@@ -1,0 +1,93 @@
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  .header-content {
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    p {
+      margin: 4px 0 0;
+      font-size: 14px;
+      color: #64748b;
+    }
+  }
+}
+
+.filter-card {
+  margin-bottom: 24px;
+  padding: 16px;
+
+  .search-field {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+.table-card {
+  padding: 0;
+  overflow: hidden;
+
+  .table-wrapper {
+    overflow-x: auto;
+
+    .accounts-table {
+      width: 100%;
+
+      th {
+        background: #f8fafc;
+        font-weight: 600;
+        color: #475569;
+        padding: 16px;
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+
+      td {
+        padding: 16px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      tr:hover td {
+        background: #f8fafc;
+      }
+
+      mat-chip {
+        font-size: 11px;
+        font-weight: 600;
+        height: 26px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 8px;
+
+        &.status-actif {
+          background: #d1fae5;
+          color: #065f46;
+        }
+
+        &.status-suspendu {
+          background: #fee2e2;
+          color: #991b1b;
+        }
+
+        &.status-inactif {
+          background: #f3f4f6;
+          color: #4b5563;
+        }
+      }
+    }
+  }
+}
