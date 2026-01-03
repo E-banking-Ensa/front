@@ -2,7 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BackofficeLayoutComponent } from './layout/backoffice-layout/backoffice-layout.component';
 
+import { UserLogin } from './layout/user-login/user-login';
+import { UserRegistration } from './layout/user-registration/user-registration';
+import { ForgotPassword } from './layout/forgot-password/forgot-password';
+
 const routes: Routes = [
+  { path: 'login', component: UserLogin },
+  { path: 'register', component: UserRegistration },
+  { path: 'forgot-password', component: ForgotPassword },
   {
     path: 'admin',
     loadComponent: () =>

@@ -26,6 +26,8 @@ yarn-error.log
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+!.vscode/project_rules.txt
+!.vscode/tracking.txt
 .history/*
 
 # Miscellaneous
@@ -41,3 +43,7 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Templtates
+/template
+.vscode
