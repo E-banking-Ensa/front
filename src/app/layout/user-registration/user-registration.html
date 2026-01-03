@@ -11,18 +11,24 @@
             <p>Create your secure e-banking account to get started.</p>
         </div>
 
-        <form class="registration-form" onsubmit="event.preventDefault();">
+        <div *ngIf="errorMessage" style="padding: 0 2rem;">
+            <div class="info-box" style="border-color: #fecaca; background-color: #fee2e2;">
+                <p style="color: #b91c1c;">{{ errorMessage }}</p>
+            </div>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="registration-form">
             <div class="form-row">
                 <div class="form-group">
                     <label for="firstName">First Name</label>
                     <div class="input-wrapper">
-                        <input type="text" id="firstName" name="firstName" placeholder="John" required>
+                        <input type="text" formControlName="firstName" id="firstName" placeholder="John">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
                     <div class="input-wrapper">
-                        <input type="text" id="lastName" name="lastName" placeholder="Smith" required>
+                        <input type="text" formControlName="lastName" id="lastName" placeholder="Smith">
                     </div>
                 </div>
             </div>
@@ -32,14 +38,30 @@
                     <label for="username">Username</label>
                     <div class="input-wrapper group">
                         <span class="material-symbols-outlined input-icon">person</span>
-                        <input type="text" id="username" name="username" placeholder="Create a username" required>
+                        <input type="text" formControlName="username" id="username" placeholder="Create a username">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <div class="input-wrapper group">
                         <span class="material-symbols-outlined input-icon">mail</span>
-                        <input type="email" id="email" name="email" placeholder="name@company.com" required>
+                        <input type="email" formControlName="email" id="email" placeholder="name@company.com">
+                    </div>
+                </div>
+                <!-- Added Phone and Address -->
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <div class="input-wrapper group">
+                        <span class="material-symbols-outlined input-icon">phone</span>
+                        <input type="text" formControlName="phoneNumber" id="phoneNumber"
+                            placeholder="+1 (555) 000-0000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <div class="input-wrapper group">
+                        <span class="material-symbols-outlined input-icon">home</span>
+                        <input type="text" formControlName="address" id="address" placeholder="123 Main St, City">
                     </div>
                 </div>
             </div>
@@ -49,9 +71,11 @@
                     <label for="password">Password</label>
                     <div class="input-wrapper group">
                         <span class="material-symbols-outlined input-icon">lock</span>
-                        <input type="password" id="password" name="password" placeholder="••••••••" required>
-                        <button type="button" class="visibility-btn">
-                            <span class="material-symbols-outlined">visibility</span>
+                        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" id="password"
+                            placeholder="••••••••">
+                        <button type="button" class="visibility-btn" (click)="togglePasswordVisibility()">
+                            <span class="material-symbols-outlined">{{ showPassword ? 'visibility' : 'visibility_off'
+                                }}</span>
                         </button>
                     </div>
                 </div>
@@ -59,10 +83,14 @@
                     <label for="confirmPassword">Confirm Password</label>
                     <div class="input-wrapper group">
                         <span class="material-symbols-outlined input-icon">lock_reset</span>
-                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••"
-                            required>
+                        <input [type]="showPassword ? 'text' : 'password'" formControlName="confirmPassword"
+                            id="confirmPassword" placeholder="••••••••">
                     </div>
                 </div>
+            </div>
+            <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched"
+                style="color: red; font-size: 0.75rem;">
+                Passwords do not match
             </div>
 
             <div class="info-box">
@@ -72,7 +100,7 @@
             </div>
 
             <div class="actions">
-                <button type="submit" class="register-btn">
+                <button type="submit" class="register-btn" [disabled]="registerForm.invalid">
                     Register
                     <span class="material-symbols-outlined btn-icon">arrow_forward</span>
                 </button>

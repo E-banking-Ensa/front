@@ -15,6 +15,7 @@
     --slate-300: #cbd5e1;
     --navy-900: #001540;
     --font-display: 'Inter', sans-serif;
+    --error-color: #ef4444;
 }
 
 .login-container {
@@ -25,6 +26,26 @@
     color: var(--slate-900);
     background-color: var(--background-light);
 }
+
+/* ... (Validations styles) ... */
+.validation-error {
+    color: var(--error-color);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+.error-message {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #fecaca;
+}
+
+/* ... (Existing styles below) ... */
 
 .login-left {
     flex: 1;
@@ -275,6 +296,12 @@
 
 .submit-btn:active {
     transform: scale(0.99);
+}
+
+.submit-btn:disabled {
+    background-color: var(--slate-300);
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 .security-badge {
