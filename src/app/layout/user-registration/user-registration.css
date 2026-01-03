@@ -7,6 +7,7 @@
     --primary-dark: #104abf;
     --bg-light: #eff6ff;
     --bg-dark: #101622;
+    --bg-dark-light: #171c25;
     --text-slate-900: #0f172a;
     --text-slate-800: #1e293b;
     --text-slate-500: #64748b;
@@ -29,7 +30,7 @@
     padding: 1rem;
     font-family: var(--font-display);
     color: var(--text-slate-800);
-    background-color: var(--bg-light);
+    background-color: var(--bg-dark-light);
     position: relative;
     overflow: hidden;
 }
@@ -393,79 +394,4 @@
 
 .footer-links a:hover {
     color: var(--primary);
-}
-
-/* Dark Mode Media Query */
-@media (prefers-color-scheme: dark) {
-    .registration-wrapper {
-        background-color: var(--bg-dark);
-        color: #f3f4f6;
-    }
-
-    .registration-card {
-        background-color: #1c1f27;
-        /* bg-dark custom */
-        border-color: #3b4354;
-    }
-
-    .card-header {
-        border-bottom-color: #2e3545;
-    }
-
-    .logo-circle {
-        background-color: rgba(19, 91, 236, 0.2);
-    }
-
-    .card-header h1 {
-        color: white;
-    }
-
-    .card-header p {
-        color: #9ca3af;
-    }
-
-    .form-group label {
-        color: #d1d5db;
-        /* gray-300 */
-    }
-
-    .input-wrapper input {
-        border-color: #3b4354;
-        background-color: #111318;
-        color: white;
-    }
-
-    .input-wrapper input:focus {
-        background-color: #111318;
-    }
-
-    .visibility-btn:hover {
-        color: #e5e7eb;
-    }
-
-    .info-box {
-        background-color: rgba(30, 58, 138, 0.2);
-        /* blue-900/20 */
-        border-color: rgba(30, 64, 175, 0.3);
-        /* blue-800/30 */
-    }
-
-    .info-box p {
-        color: rgba(219, 234, 254, 0.8);
-    }
-
-    .login-link p {
-        color: #9ca3af;
-        /* gray-400 */
-    }
-
-    .card-footer {
-        background-color: #161920;
-        border-top-color: #2e3545;
-    }
-
-    .page-footer {
-        color: #4b5563;
-        /* gray-600 */
-    }
 }
