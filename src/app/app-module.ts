@@ -17,7 +17,7 @@ import {RechargeComponent} from './layout/recharge/recharge.component';
     BrowserModule,
     AppRoutingModule,
 
-    HttpClientModule
+    HttpClientModule,
 
     ReactiveFormsModule
 
