@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BackofficeLayoutComponent } from './layout/backoffice-layout/backoffice-layout.component';
+import {ProfileComponent} from './layout/profile/profile.component';
+import {RechargeComponent} from './layout/recharge/recharge.component';
 
 const routes: Routes = [
   {
@@ -13,7 +15,8 @@ const routes: Routes = [
         .then(m => m.AdminRoutingModule)
   },
   { path: '', redirectTo: '/admin', pathMatch: 'full' },
-  { path: '**', redirectTo: '/admin' }
+  {path: 'profile', component: ProfileComponent},
+  {path: 'recharge', component: RechargeComponent}
 ];
 
 
