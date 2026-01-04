@@ -7,6 +7,7 @@ import {ProfileComponent} from './layout/profile/profile.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {RechargeComponent} from './layout/recharge/recharge.component';
 
+
 @NgModule({
   declarations: [
     App,

@@ -1,0 +1,44 @@
+<mat-sidenav-container class="sidenav-container">
+  <!-- Sidebar -->
+  <mat-sidenav
+    mode="side"
+    opened
+    class="sidenav"
+    [class.expanded]="isSidenavExpanded">
+
+    <!-- Logo Section -->
+    <div class="logo-section">
+      <mat-icon class="logo-icon">account_balance</mat-icon>
+      <span class="logo-text" *ngIf="isSidenavExpanded">ebanking</span>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Navigation Menu -->
+    <mat-nav-list class="nav-list">
+      <a
+        mat-list-item
+        *ngFor="let item of menuItems"
+        [routerLink]="item.route"
+        [class.active]="isActive(item.route)"
+        class="nav-item">
+        <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-label" *ngIf="isSidenavExpanded">{{ item.label }}</span>
+      </a>
+    </mat-nav-list>
+
+    <!-- Logout Button -->
+    <div class="logout-section">
+      <mat-divider></mat-divider>
+      <button mat-list-item class="logout-button" (click)="logout()">
+        <mat-icon class="nav-icon logout-icon">exit_to_app</mat-icon>
+        <span class="nav-label" *ngIf="isSidenavExpanded">Logout</span>
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
