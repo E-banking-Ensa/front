@@ -1,0 +1,67 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Comptes du client {{ clientName }}</h1>
+      <p>Consultez tous les comptes associés à ce client</p>
+    </div>
+  </div>
+
+  <!-- Filtre / Recherche -->
+  <mat-card class="filter-card">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Rechercher un compte</mat-label>
+      <input matInput placeholder="Type, statut, devise..." [(ngModel)]="searchTerm" (input)="filterAccounts()">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </mat-card>
+
+  <!-- Tableau -->
+  <mat-card class="table-card">
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="filteredAccounts" class="accounts-table">
+
+        <!-- ID -->
+        <ng-container matColumnDef="accountId">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let acc">{{ acc.accountId }}</td>
+        </ng-container>
+
+        <!-- Type -->
+        <ng-container matColumnDef="accountType">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let acc">{{ acc.accountType }}</td>
+        </ng-container>
+
+        <!-- Solde -->
+        <ng-container matColumnDef="balance">
+          <th mat-header-cell *matHeaderCellDef>Solde</th>
+          <td mat-cell *matCellDef="let acc">{{ acc.balance | number:'1.2-2' }}</td>
+        </ng-container>
+
+        <!-- Devise -->
+        <ng-container matColumnDef="currency">
+          <th mat-header-cell *matHeaderCellDef>Devise</th>
+          <td mat-cell *matCellDef="let acc">{{ acc.currency }}</td>
+        </ng-container>
+
+        <!-- Statut -->
+        <ng-container matColumnDef="accountStatus">
+          <th mat-header-cell *matHeaderCellDef>Statut</th>
+          <td mat-cell *matCellDef="let acc">
+            <mat-chip [ngClass]="{
+              'status-actif': acc.accountStatus === 'ACTIVE',
+              'status-suspendu': acc.accountStatus === 'SUSPENDED',
+              'status-inactif': acc.accountStatus === 'INACTIVE'
+            }">
+              {{ acc.accountStatus }}
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </mat-card>
+</div>

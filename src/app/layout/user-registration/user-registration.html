@@ -1,0 +1,130 @@
+<div class="registration-wrapper">
+    <div class="background-decor-1"></div>
+    <div class="background-decor-2"></div>
+
+    <main class="registration-card">
+        <div class="card-header">
+            <div class="logo-circle">
+                <span class="material-symbols-outlined logo-icon">account_balance</span>
+            </div>
+            <h1>User Registration</h1>
+            <p>Create your secure e-banking account to get started.</p>
+        </div>
+
+        <div *ngIf="errorMessage" style="padding: 0 2rem;">
+            <div class="info-box" style="border-color: #fecaca; background-color: #fee2e2;">
+                <p style="color: #b91c1c;">{{ errorMessage }}</p>
+            </div>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="registration-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" formControlName="firstName" id="firstName" placeholder="John">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" formControlName="lastName" id="lastName" placeholder="Smith">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper group">
+                        <span class="material-symbols-outlined input-icon">person</span>
+                        <input type="text" formControlName="username" id="username" placeholder="Create a username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper group">
+                        <span class="material-symbols-outlined input-icon">mail</span>
+                        <input type="email" formControlName="email" id="email" placeholder="name@company.com">
+                    </div>
+                </div>
+                <!-- Added Phone and Address -->
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <div class="input-wrapper group">
+                        <span class="material-symbols-outlined input-icon">phone</span>
+                        <input type="text" formControlName="phoneNumber" id="phoneNumber"
+                            placeholder="+1 (555) 000-0000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <div class="input-wrapper group">
+                        <span class="material-symbols-outlined input-icon">home</span>
+                        <input type="text" formControlName="address" id="address" placeholder="123 Main St, City">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper group">
+                        <span class="material-symbols-outlined input-icon">lock</span>
+                        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" id="password"
+                            placeholder="••••••••">
+                        <button type="button" class="visibility-btn" (click)="togglePasswordVisibility()">
+                            <span class="material-symbols-outlined">{{ showPassword ? 'visibility' : 'visibility_off'
+                                }}</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-wrapper group">
+                        <span class="material-symbols-outlined input-icon">lock_reset</span>
+                        <input [type]="showPassword ? 'text' : 'password'" formControlName="confirmPassword"
+                            id="confirmPassword" placeholder="••••••••">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched"
+                style="color: red; font-size: 0.75rem;">
+                Passwords do not match
+            </div>
+
+            <div class="info-box">
+                <span class="material-symbols-outlined info-icon">info</span>
+                <p>Password must contain at least 8 characters, including 1 uppercase letter, 1 number, and 1 special
+                    character.</p>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="register-btn" [disabled]="registerForm.invalid">
+                    Register
+                    <span class="material-symbols-outlined btn-icon">arrow_forward</span>
+                </button>
+            </div>
+
+            <div class="login-link">
+                <p>Already have an account? <a routerLink="/login">Log In</a></p>
+            </div>
+        </form>
+
+        <div class="card-footer">
+            <div class="security-info">
+                <span class="material-symbols-outlined lock-icon">lock</span>
+                <span>256-bit SSL Encryption</span>
+            </div>
+            <span>© 2023 Secure E-Banking</span>
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        <div class="footer-links">
+            <a routerLink="/privacy">Privacy Policy</a>
+            <a routerLink="/terms">Terms of Service</a>
+            <a routerLink="/help-center">Help Center</a>
+        </div>
+    </footer>
+</div>

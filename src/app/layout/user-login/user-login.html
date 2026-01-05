@@ -1,0 +1,122 @@
+<div class="login-container">
+    <div class="login-left">
+        <header class="logo-header">
+            <div class="logo-icon">
+                <span class="material-symbols-outlined icon">account_balance</span>
+            </div>
+            <h2 class="brand-name">SecureBank</h2>
+        </header>
+
+        <main class="login-content">
+            <div class="header-text">
+                <h1>Welcome Back</h1>
+                <p>Please enter your credentials to access your account.</p>
+            </div>
+
+            <div *ngIf="errorMessage" class="error-message">
+                {{ errorMessage }}
+            </div>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+                <label class="form-group">
+                    <span class="label-text">Username</span>
+                    <div class="input-wrapper group">
+                        <input type="text" formControlName="username" class="form-input"
+                            placeholder="Enter your username">
+                        <span class="material-symbols-outlined input-icon">person</span>
+                    </div>
+                    <div *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid"
+                        class="validation-error">
+                        username is required
+                    </div>
+                </label>
+
+                <label class="form-group">
+                    <span class="label-text">Password</span>
+                    <div class="input-wrapper group">
+                        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form-input"
+                            placeholder="Enter your password">
+                        <span class="material-symbols-outlined input-icon">lock</span>
+                        <button type="button" class="visibility-toggle" (click)="togglePasswordVisibility()">
+                            <span class="material-symbols-outlined">{{ showPassword ? 'visibility' : 'visibility_off'
+                                }}</span>
+                        </button>
+                    </div>
+                    <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+                        class="validation-error">
+                        Password is required
+                    </div>
+                </label>
+
+                <div class="form-actions">
+                    <label class="remember-me">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" formControlName="rememberMe" class="checkbox">
+                            <span class="material-symbols-outlined check-mark">check</span>
+                        </div>
+                        <span>Remember me</span>
+                    </label>
+                    <a routerLink="/forgot-password" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button class="submit-btn" type="submit" [disabled]="loginForm.invalid">
+                    <span>Secure Login</span>
+                    <span class="material-symbols-outlined">lock_open</span>
+                </button>
+
+                <div class="security-badge">
+                    <span class="material-symbols-outlined security-icon">verified_user</span>
+                    <div class="security-text">
+                        <strong>Bank-Grade Security</strong>
+                        Your session is protected with 256-bit encryption. We never share your data.
+                    </div>
+                </div>
+            </form>
+        </main>
+
+        <footer class="login-footer">
+            <p>New user? <a routerLink="/register">Open an account</a></p>
+            <div class="footer-links">
+                <a routerLink="/help-center">Help Center</a>
+                <a routerLink="/privacy">Privacy</a>
+            </div>
+        </footer>
+    </div>
+
+    <div class="login-right">
+        <div class="bg-image"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDQ_GCUXoKCh5Hh5SV7BodUE3w5ukgbavSIn7f76dBjImlO4vS1mjvNfjFbxq6Nbqzk4UgVRupNICVsvJNVKqJJe7zKVo-FIzvXDN087zkQ7gcROJ4qzZ4_-oRfD4spHBVAVzzza2cJaraO2RPefk4Noy0mdqyMMmS-qZmIBOzNi0i1A7LOqhinoSloKZlvFS2j8kSBogZAkf2kmPNym10bXguwnejQlZkfIeyGF0P7TPH3XQ9hd4YrX0BEP5c_bphzarCLlHd_2caZ');">
+        </div>
+        <div class="bg-overlay"></div>
+        <div class="bg-gradient"></div>
+
+        <div class="feature-content">
+            <div class="feature-text-group">
+                <div class="secure-tag">
+                    <span class="ping-container">
+                        <span class="ping-animation"></span>
+                        <span class="ping-dot"></span>
+                    </span>
+                    <span class="tag-text">Secure Connection</span>
+                </div>
+
+                <h3>Experience the future of <br /><span class="highlight-blue">secure digital banking</span>.</h3>
+
+                <p class="description">Join millions of users who trust SecureBank for their personal and business
+                    financial needs.</p>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <span class="stat-value">20M+</span>
+                        <span class="stat-label">Active Users</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value">99.9%</span>
+                        <span class="stat-label">Uptime</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

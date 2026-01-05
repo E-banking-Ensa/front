@@ -1,0 +1,171 @@
+// ================================================
+// sidebar-client.component.scss
+// ================================================
+
+.sidenav-container {
+  height: 100vh;
+  width: 100%;
+}
+
+.sidenav {
+  width: 240px;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+
+  // Logo Section
+  .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 24px 16px;
+    margin-bottom: 8px;
+
+    .logo-icon {
+      color: #3b82f6;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+      white-space: nowrap;
+    }
+  }
+
+  // Navigation List - Sidebar Navigation Items
+  // Chaque élément est un "Menu Item avec état actif"
+  .nav-list {
+    flex: 1;
+    padding: 0 12px;
+
+    .nav-item {
+      // Sidebar Navigation Item avec fond blanc, bordure visible et arrondie
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: #4b5563;
+      text-decoration: none;
+      height: 48px;
+      position: relative;
+      background-color: #ffffff;
+      border: 1px solid #e5e7eb;
+
+      .nav-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        color: inherit;
+        transition: color 0.25s ease;
+      }
+
+      .nav-label {
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+        color: inherit;
+        transition: color 0.25s ease;
+      }
+
+      &:hover:not(.active) {
+        background-color: #f9fafb;
+        border-color: #d1d5db;
+        color: #374151;
+      }
+
+      &.active {
+        // État actif du Menu Item (ex: Dashboard)
+        // Fond bleu très clair avec bordure bleue douce
+        background-color: #eff6ff;
+        border: 1px solid #93c5fd;
+        color: #2563eb;
+
+        .nav-icon {
+          color: #2563eb;
+        }
+
+        .nav-label {
+          color: #2563eb;
+        }
+      }
+    }
+  }
+
+  // Logout Button
+  .logout-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin: 16px 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: #ef4444;
+    height: 48px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    width: calc(100% - 24px);
+
+    .nav-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: #ef4444;
+      transition: color 0.25s ease;
+    }
+
+    .nav-label {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      color: #ef4444;
+      transition: color 0.25s ease;
+    }
+
+    &:hover {
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      color: #dc2626;
+
+      .nav-icon {
+        color: #dc2626;
+      }
+
+      .nav-label {
+        color: #dc2626;
+      }
+    }
+  }
+}
+
+.main-content {
+  background-color: #f9fafb;
+  overflow-x: hidden;
+}
+
+// Remove default Material styles
+::ng-deep {
+  .mat-mdc-list-item {
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+
+  .mat-mdc-list-item-interactive::before {
+    background-color: transparent !important;
+  }
+}

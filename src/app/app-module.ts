@@ -1,27 +1,37 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 
+import { UserLogin } from './layout/user-login/user-login';
+import { UserRegistration } from './layout/user-registration/user-registration';
+import { ForgotPassword } from './layout/forgot-password/forgot-password';
+
 import { ProfileComponent } from './layout/profile/profile.component';
 import { RechargeComponent } from './layout/recharge/recharge.component';
-import { AccountTypeComponent } from './layout/account-type/account-type.component';
-import { AssistantChatComponent } from './layout/assistant-chat/assistant-chat.component';
+
+import { authInterceptor } from './core/auth/auth.interceptor';
+
 @NgModule({
   declarations: [
     App,
+    UserLogin,
+    UserRegistration,
+    ForgotPassword,
     ProfileComponent,
     RechargeComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule
+    ReactiveFormsModule
+  ],
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideHttpClient(withInterceptors([authInterceptor]))
   ],
   bootstrap: [App]
 })

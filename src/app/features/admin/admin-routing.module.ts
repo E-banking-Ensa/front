@@ -40,10 +40,15 @@ const routes: Routes = [
     loadComponent: () => import('./consents/consents.component')
       .then(m => m.ConsentTypesComponent)
   },
+  // {
+  //   path: 'accounts',
+  //   loadComponent: () => import('./dashboard/admin-dashboard/admin-dashboard.component')
+  //     .then(m => m.AdminDashboardComponent) // Temporaire, créer le composant plus tard
+  // }
   {
-    path: 'accounts',
-    loadComponent: () => import('./dashboard/admin-dashboard/admin-dashboard.component')
-      .then(m => m.AdminDashboardComponent) // Temporaire, créer le composant plus tard
+    path: 'accounts/:name/:clientId',
+    loadComponent: () => import('./accounts/accounts.component')
+      .then(m => m.AccountsComponent)
   }
 ];
 
