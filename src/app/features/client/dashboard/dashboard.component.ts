@@ -5,8 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-import { ClientService } from '../../../core/services/clients.service';
-import { ClientDTOS } from '../../../core/models/ClientDTOS';
+import { ClientService } from '../../../core/services/client.service';
+import { ClientDto } from '../../../core/models/ClientDto';
 import { AccountDTO } from '../../../core/models/AccountDTO';
 import { TransactionDTO } from '../../../core/models/TransactionDTO';
 
@@ -25,7 +25,7 @@ import { TransactionDTO } from '../../../core/models/TransactionDTO';
   ]
 })
 export class ClientDashboardComponent implements OnInit {
-  currentClient: ClientDTOS | null = null;
+  currentClient: ClientDto | null = null;
   accounts: AccountDTO[] = [];
   recentTransactions: TransactionDTO[] = [];
   selectedAccountId: number | null = null;

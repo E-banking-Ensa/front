@@ -7,7 +7,7 @@ import { AccountStatus } from './AccountStatus.enum';
 
 export interface AccountDTO {
   accountId: number;
-  userId: string;           // UUID → string
+  clientId: string;           // UUID → string
   rib: string;
   accountType: AccountType;
   accountStatus: AccountStatus;

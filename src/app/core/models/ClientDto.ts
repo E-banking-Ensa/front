@@ -1,3 +1,5 @@
+import { AccountDTO } from './AccountDTO';
+
 export interface ClientDto{
   clientId:string;
   username:string;
@@ -9,4 +11,6 @@ export interface ClientDto{
   kycStatus:string;
   createdAt:Date;
   status:string;
+  accounts: AccountDTO[];
 }
+
