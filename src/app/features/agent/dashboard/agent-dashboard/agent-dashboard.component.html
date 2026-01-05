@@ -1,0 +1,164 @@
+<!--
+  ═══════════════════════════════════════════════════════════════════════════════
+  AGENT DASHBOARD - Template Principal
+  
+  Affiche:
+  - Statistiques clés en cartes
+  - Activités récentes
+  - Tâches prioritaires
+  ═══════════════════════════════════════════════════════════════════════════════
+-->
+
+<div class="dashboard-container">
+  
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- TITRE ET DESCRIPTION -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1>Tableau de Bord Agent</h1>
+      <p *ngIf="agentData" class="agent-info">
+        Bienvenue <strong>{{ agentData.agentName }}</strong> ! 
+        ({{ agentData.agentEmail }})
+      </p>
+      <p *ngIf="!agentData && loading" class="agent-info loading">Chargement des données...</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- CARTES DE STATISTIQUES -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-list cols="4" rowHeight="140px" class="statistics-grid">
+    
+    <!-- Carte 1: Total Clients -->
+    <mat-grid-tile>
+      <mat-card class="stat-card">
+        <div class="stat-icon clients-icon">👥</div>
+        <div class="stat-content">
+          <h3 class="stat-title">Clients Total</h3>
+          <p class="stat-value">{{ statistics.totalClients }}</p>
+          <p class="stat-subtitle">Tous les clients</p>
+        </div>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Carte 2: KYC En Attente -->
+    <mat-grid-tile>
+      <mat-card class="stat-card pending">
+        <div class="stat-icon pending-icon">⏳</div>
+        <div class="stat-content">
+          <h3 class="stat-title">KYC En Attente</h3>
+          <p class="stat-value">{{ statistics.clientsPendingKyc }}</p>
+          <p class="stat-subtitle">À valider</p>
+        </div>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Carte 3: Transactions Actives -->
+    <mat-grid-tile>
+      <mat-card class="stat-card active">
+        <div class="stat-icon active-icon">💰</div>
+        <div class="stat-content">
+          <h3 class="stat-title">Transactions</h3>
+          <p class="stat-value">{{ statistics.activeTransactions }}</p>
+          <p class="stat-subtitle">Actives</p>
+        </div>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Carte 4: Taux de Vérification -->
+    <mat-grid-tile>
+      <mat-card class="stat-card verified">
+        <div class="stat-icon verified-icon">✅</div>
+        <div class="stat-content">
+          <h3 class="stat-title">Taux Vérification</h3>
+          <p class="stat-value">{{ statistics.verificationRate }}%</p>
+          <p class="stat-subtitle">Clients vérifiés</p>
+        </div>
+      </mat-card>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- CONTENU PRINCIPAL EN DEUX COLONNES -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <div class="dashboard-content">
+    
+    <!-- COLONNE GAUCHE: Activités Récentes -->
+    <div class="column left-column">
+      <mat-card class="content-card">
+        <div class="card-header">
+          <h2>Activités Récentes</h2>
+          <mat-icon class="header-icon">history</mat-icon>
+        </div>
+
+        <div class="activities-list">
+          <ng-container *ngFor="let activity of recentActivities">
+            <div class="activity-item" [class.completed]="activity.status === 'completed'">
+              <div class="activity-icon">
+                <mat-icon>{{ getActivityIcon(activity.type) }}</mat-icon>
+              </div>
+              <div class="activity-content">
+                <h3 class="activity-title">{{ activity.title }}</h3>
+                <p class="activity-description">{{ activity.description }}</p>
+                <div class="activity-footer">
+                  <span class="activity-time">{{ formatTime(activity.timestamp) }}</span>
+                  <mat-chip-set>
+                    <mat-chip [highlighted]="activity.status === 'completed'">
+                      {{ activity.status === 'completed' ? 'Complété' : 'En attente' }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- COLONNE DROITE: Tâches Prioritaires -->
+    <div class="column right-column">
+      <mat-card class="content-card">
+        <div class="card-header">
+          <h2>Tâches Prioritaires</h2>
+          <mat-icon class="header-icon">task_alt</mat-icon>
+        </div>
+
+        <div class="tasks-list">
+          <ng-container *ngFor="let task of priorityTasks">
+            <div class="task-item">
+              <div class="task-header">
+                <h3 class="task-title">{{ task.title }}</h3>
+                <mat-chip [color]="getStatusColor(task.priority)" selected>
+                  {{ task.priority === 'high' ? 'Priorité haute' : 
+                     task.priority === 'medium' ? 'Priorité moyenne' : 'Priorité basse' }}
+                </mat-chip>
+              </div>
+              <p class="task-description">{{ task.description }}</p>
+              <mat-progress-bar 
+                mode="determinate" 
+                [value]="task.progress"
+                class="task-progress">
+              </mat-progress-bar>
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="tasks-actions">
+          <button mat-stroked-button color="primary" (click)="goToKycValidation()">
+            <mat-icon>verified_user</mat-icon>
+            Valider KYC
+          </button>
+          <button mat-stroked-button color="accent" (click)="goToClients()">
+            <mat-icon>people</mat-icon>
+            Gérer Clients
+          </button>
+        </div>
+      </mat-card>
+    </div>
+
+  </div>
+
+</div>

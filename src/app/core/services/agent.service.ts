@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AgentDto } from '../models/AgentDto';
 import { CreateUserRequestDto } from '../models/CreateUserRequestDto';
 import { UserResponseDto } from '../models/UserResponseDto';
+import { DashbordAgent } from '../models/DashbordAgent';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,9 @@ export class AgentService {
     return this.http.get<AgentDto[]>(`${this.baseUrl}/allAgents`);
   }
 
+  /*recuperer les consnets d'un el client
+
+  */
   /**
    * Créer un nouvel agent
    * POST /api/v1/users/internal/sync

@@ -1,0 +1,195 @@
+// ====== HEADER ======
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 4px 4px 0 0;
+  margin: -24px -24px 24px -24px;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .close-btn {
+    color: white;
+  }
+}
+
+// ====== CONTENU ======
+.dialog-content {
+  padding: 20px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+// ====== ÉTAT DE CHARGEMENT ======
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 20px;
+
+  p {
+    color: #666;
+  }
+}
+
+// ====== ONGLETS ======
+::ng-deep {
+  .mat-tab-label {
+    min-width: 160px;
+    padding: 0 16px;
+  }
+
+  .tab-icon {
+    margin-right: 8px;
+  }
+}
+
+// ====== CARDS ======
+.info-card,
+.accounts-card,
+.kyc-card,
+.consents-card {
+  margin-top: 16px;
+
+  mat-card-content {
+    padding: 16px;
+  }
+}
+
+// ====== GRILLE INFORMATIONS ======
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.info-section {
+  h3 {
+    color: #667eea;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+
+  mat-list {
+    padding: 0;
+  }
+
+  mat-list-item {
+    height: auto;
+    padding: 8px 0;
+    font-size: 14px;
+
+    strong {
+      color: #333;
+      margin-right: 8px;
+      min-width: 100px;
+    }
+  }
+}
+
+// ====== TABLE ======
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 16px;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      background-color: #f5f5f5;
+      font-weight: 600;
+      color: #333;
+      padding: 12px;
+      text-align: left;
+      border-bottom: 2px solid #ddd;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 13px;
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+
+    tr:hover {
+      background-color: #fafafa;
+    }
+  }
+}
+
+// ====== MESSAGE VIDE ======
+.empty-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #999;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+// ====== FOOTER ======
+::ng-deep {
+  .mat-dialog-actions {
+    padding: 16px 24px;
+    border-top: 1px solid #f0f0f0;
+    margin: 24px -24px -24px -24px;
+  }
+}
+
+// ====== CHIPS ======
+::ng-deep {
+  .mat-chip {
+    min-height: 28px;
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+}
+
+// ====== RESPONSIVE ======
+@media (max-width: 600px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .table-wrapper {
+    font-size: 12px;
+
+    th,
+    td {
+      padding: 8px 4px;
+    }
+  }
+}

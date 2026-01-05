@@ -1,0 +1,125 @@
+<!-- 
+  ═══════════════════════════════════════════════════════════════════════════════
+  AGENT LAYOUT - Template
+  
+  Structure:
+  - Toolbar: Barre d'outils avec titre, bouton toggle sidebar, menu user
+  - Sidenav: Barre latérale avec navigation
+  - Content: Zone de contenu pour les routes enfants
+  ═══════════════════════════════════════════════════════════════════════════════
+-->
+
+<mat-sidenav-container class="agent-container">
+  
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- TOOLBAR - Barre d'outils en haut -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <mat-toolbar class="agent-toolbar">
+    <!-- Bouton toggle sidebar (hamburger menu) -->
+    <button mat-icon-button 
+            class="toggle-sidebar-btn"
+            (click)="toggleSidebar()"
+            [attr.aria-label]="'Toggle sidebar'">
+      <mat-icon>{{ isSidebarOpen ? 'menu_open' : 'menu' }}</mat-icon>
+    </button>
+
+    <!-- Titre et logo de l'application -->
+    <div class="toolbar-title">
+      <mat-icon class="toolbar-logo">security</mat-icon>
+      <span>E-Banking Agent Portal</span>
+    </div>
+
+    <!-- Espace flexible pour pousser le menu utilisateur à droite -->
+    <span class="spacer"></span>
+
+    <!-- Menu utilisateur (profil, paramètres, déconnexion) -->
+    <button mat-icon-button 
+            [matMenuTriggerFor]="userMenu"
+            class="user-menu-btn">
+      <mat-icon matBadge="1" matBadgeColor="warn">notifications</mat-icon>
+    </button>
+
+    <button mat-icon-button 
+            [matMenuTriggerFor]="userMenu"
+            class="user-menu-btn">
+      <span class="user-avatar">{{ agentInfo.avatar }}</span>
+    </button>
+  </mat-toolbar>
+
+  <!-- Menu utilisateur (dropdown) -->
+  <mat-menu #userMenu="matMenu" class="user-menu">
+    <button mat-menu-item disabled>
+      <mat-icon>account_circle</mat-icon>
+      <span>{{ agentInfo.name }}</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      <span>Paramètres</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>help</mat-icon>
+      <span>Aide</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Déconnexion</span>
+    </button>
+  </mat-menu>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- SIDENAV - Barre latérale de navigation -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <mat-sidenav #sidenav
+               [opened]="isSidebarOpen"
+               [mode]="'side'"
+               class="agent-sidenav">
+    
+    <!-- En-tête de la sidebar avec logo -->
+    <div class="sidenav-header">
+      <div class="sidenav-logo">🏦</div>
+      <div class="sidenav-title">Agent Bancaire</div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Liste de navigation principale -->
+    <mat-nav-list class="agent-nav-list">
+      <ng-container *ngFor="let item of navItems">
+        <!-- Élément de navigation -->
+        <mat-list-item class="nav-item"
+                       [routerLink]="item.route"
+                       routerLinkActive="nav-item-active"
+                       [routerLinkActiveOptions]="{ exact: false }"
+                       [matTooltip]="item.tooltip"
+                       matTooltipPosition="right">
+          <mat-icon matListItemIcon class="nav-icon">{{ item.icon }}</mat-icon>
+          <span matListItemTitle class="nav-label">{{ item.label }}</span>
+        </mat-list-item>
+      </ng-container>
+    </mat-nav-list>
+
+    <mat-divider></mat-divider>
+
+    <!-- Section infos agent en bas de la sidebar -->
+    <div class="sidenav-footer">
+      <div class="agent-info">
+        <div class="agent-avatar">{{ agentInfo.avatar }}</div>
+        <div class="agent-details">
+          <div class="agent-name">{{ agentInfo.name }}</div>
+          <div class="agent-email">{{ agentInfo.email }}</div>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- CONTENT - Zone de contenu principale -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <mat-sidenav-content class="agent-content">
+    <!-- Router outlet pour afficher les composants enfants -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

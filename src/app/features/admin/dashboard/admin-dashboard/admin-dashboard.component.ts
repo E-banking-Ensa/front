@@ -1,10 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import {DashbordService} from '../../../../core/services/dashbord.service';
-import {DashbordAdmin} from '../../../../core/models/DashbordAdmin';
-import { AccountService } from '../../../../core/services/account.service';
+
+interface DashboardStats {
+  agents: number;
+  clients: number;
+  consents: number;
+  comptes: number;
+}
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -18,39 +22,18 @@ import { AccountService } from '../../../../core/services/account.service';
   ]
 })
 export class AdminDashboardComponent implements OnInit {
-
-  stats: DashbordAdmin = {
-    agents: 0,
-    clients: 0,
-    consents: 0,
-    comptes: 0
+  stats: DashboardStats = {
+    agents: 15,
+    clients: 250,
+    consents: 1200,
+    comptes: 500
   };
 
-  loading = true;
+  loading = false;
 
-  constructor(
-    private dashbordService: DashbordService,
-    private accountservice:AccountService,
-    private cd: ChangeDetectorRef
-  ) {}
+  constructor() {}
 
   ngOnInit(): void {
-    this.loadDashboard();
-  }
-
-  loadDashboard(): void {
-    this.dashbordService.getDashboard().subscribe({
-      next: (data) => {
-        this.stats = data;
-        this.loading = false;
-
-        // 🔹 évite NG0100
-        this.cd.detectChanges();
-      },
-      error: (err) => {
-        console.error('Erreur chargement dashboard', err);
-        this.loading = false;
-      }
-    });
+    // Mock data loaded directly
   }
 }
