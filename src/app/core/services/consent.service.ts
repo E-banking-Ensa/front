@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ConsentTypeDto} from '../models/ConsentTypeDto';
+import { ConsentDto } from '../models/consentDto';
 import { ConsentTypeRequest } from '../models/ConsentTypeRequest';
 
 @Injectable({
@@ -36,5 +37,10 @@ export class ConsentService {
   // 5️⃣ Supprimer un type de consentement
   deleteConsentType(typeId: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${typeId}`);
+  }
+
+  // 6️⃣ Récupérer les consentements d'un client, cela ets affiche chez agent
+  getClientConsents(clientId: string): Observable<ConsentDto[]> {
+    return this.http.get<ConsentDto[]>(`${this.baseUrl}/clients/${clientId}/consents`);
   }
 }

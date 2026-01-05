@@ -1,0 +1,310 @@
+<!-- ====== HEADER DIALOGUE ====== -->
+<div mat-dialog-title class="dialog-header" *ngIf="client">
+  <h2>{{ client.firstName }} {{ client.lastName }}</h2>
+  <button mat-icon-button [mat-dialog-close] class="close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<!-- ====== CONTENU DIALOGUE ====== -->
+<div mat-dialog-content class="dialog-content">
+  <!-- État de chargement -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Chargement des données...</p>
+  </div>
+
+  <!-- Contenu onglets -->
+  <mat-tab-group *ngIf="!isLoading && client" [(selectedIndex)]="selectedTabIndex">
+    <!-- ====== ONGLET 1: INFORMATIONS PERSONNELLES ====== -->
+    <mat-tab label="Informations">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">person</mat-icon>
+        <span>Informations</span>
+      </ng-template>
+
+      <mat-card class="info-card">
+        <mat-card-content>
+          <div class="info-grid">
+            <!-- Identité -->
+            <div class="info-section">
+              <h3>Identité</h3>
+              <mat-list>
+                <mat-list-item>
+                  <strong>Prénom:</strong>
+                  {{ client.firstName }}
+                </mat-list-item>
+                <mat-list-item>
+                  <strong>Nom:</strong>
+                  {{ client.lastName }}
+                </mat-list-item>
+                <mat-list-item>
+                  <strong>ID Client:</strong>
+                  {{ client.clientId }}
+                </mat-list-item>
+                <mat-list-item>
+                  <strong>Nom d'utilisateur:</strong>
+                  {{ client.username }}
+                </mat-list-item>
+              </mat-list>
+            </div>
+
+            <!-- Contact -->
+            <div class="info-section">
+              <h3>Contact</h3>
+              <mat-list>
+                <mat-list-item>
+                  <strong>Email:</strong>
+                  {{ client.email }}
+                </mat-list-item>
+                <mat-list-item>
+                  <strong>Téléphone:</strong>
+                  {{ client.phoneNumber }}
+                </mat-list-item>
+                <mat-list-item>
+                  <strong>Adresse:</strong>
+                  {{ client.adresse }}
+                </mat-list-item>
+              </mat-list>
+            </div>
+
+            <!-- Statuts -->
+            <div class="info-section">
+              <h3>Statuts</h3>
+              <mat-list>
+                <mat-list-item>
+                  <strong>Statut KYC:</strong>
+                  <mat-chip [color]="getKycStatusColor(client.kycStatus)" selected>
+                    {{ client.kycStatus | uppercase }}
+                  </mat-chip>
+                </mat-list-item>
+                <mat-list-item>
+                  <strong>Statut Client:</strong>
+                  <mat-chip [color]="getAccountStatusColor(client.status)" selected>
+                    {{ client.status | uppercase }}
+                  </mat-chip>
+                </mat-list-item>
+                <mat-list-item>
+                  <strong>Date Création:</strong>
+                  {{ client.createdAt | date: 'medium' }}
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- ====== ONGLET 2: COMPTES BANCAIRES ====== -->
+    <mat-tab label="Comptes">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">account_balance</mat-icon>
+        <span>Comptes ({{ accounts.length }})</span>
+      </ng-template>
+
+      <mat-card class="accounts-card">
+        <mat-card-content>
+          <div *ngIf="accounts.length > 0" class="table-wrapper">
+            <table mat-table [dataSource]="accounts" class="accounts-table">
+              <!-- Colonne: ID Compte -->
+              <ng-container matColumnDef="accountId">
+                <th mat-header-cell *matHeaderCellDef>ID Compte</th>
+                <td mat-cell *matCellDef="let element">{{ element.accountId }}</td>
+              </ng-container>
+
+              <!-- Colonne: RIB -->
+              <ng-container matColumnDef="rib">
+                <th mat-header-cell *matHeaderCellDef>RIB</th>
+                <td mat-cell *matCellDef="let element">{{ element.rib }}</td>
+              </ng-container>
+
+              <!-- Colonne: Type -->
+              <ng-container matColumnDef="accountType">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let element">{{ element.accountType }}</td>
+              </ng-container>
+
+              <!-- Colonne: Statut -->
+              <ng-container matColumnDef="accountStatus">
+                <th mat-header-cell *matHeaderCellDef>Statut</th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-chip [color]="getAccountStatusColor(element.accountStatus)" selected>
+                    {{ element.accountStatus | uppercase }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Colonne: Solde -->
+              <ng-container matColumnDef="balance">
+                <th mat-header-cell *matHeaderCellDef>Solde</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.balance | currency: element.currency }}
+                </td>
+              </ng-container>
+
+              <!-- Colonne: Actions -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button matTooltip="Voir transactions">
+                    <mat-icon>history</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="accountsColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: accountsColumns;"></tr>
+            </table>
+          </div>
+          <div *ngIf="accounts.length === 0" class="empty-message">
+            <mat-icon>inbox</mat-icon>
+            <p>Aucun compte bancaire</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- ====== ONGLET 3: DOCUMENTS KYC ====== -->
+    <mat-tab label="Documents KYC">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">description</mat-icon>
+        <span>KYC ({{ kycDocuments.length }})</span>
+      </ng-template>
+
+      <mat-card class="kyc-card">
+        <mat-card-content>
+          <div *ngIf="kycDocuments.length > 0" class="table-wrapper">
+            <table mat-table [dataSource]="kycDocuments" class="kyc-table">
+              <!-- Colonne: Type Document -->
+              <ng-container matColumnDef="documentType">
+                <th mat-header-cell *matHeaderCellDef>Type Document</th>
+                <td mat-cell *matCellDef="let element">{{ element.documentType }}</td>
+              </ng-container>
+
+              <!-- Colonne: Statut -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Statut</th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-chip [color]="getKycStatusColor(element.status)" selected>
+                    {{ element.status | uppercase }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Colonne: Date Upload -->
+              <ng-container matColumnDef="uploadedAt">
+                <th mat-header-cell *matHeaderCellDef>Téléchargé le</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.uploadedAt | date: 'short' }}
+                </td>
+              </ng-container>
+
+              <!-- Colonne: Commentaire -->
+              <ng-container matColumnDef="reviewComment">
+                <th mat-header-cell *matHeaderCellDef>Commentaire</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.reviewComment | slice: 0: 30 }}...
+                </td>
+              </ng-container>
+
+              <!-- Colonne: Actions -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let element">
+                  <button
+                    mat-icon-button
+                    matTooltip="Valider"
+                    *ngIf="element.status === 'PENDING'"
+                    (click)="validateKycDocument(element.id)"
+                    color="accent"
+                  >
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    matTooltip="Rejeter"
+                    *ngIf="element.status === 'PENDING'"
+                    (click)="rejectKycDocument(element.id)"
+                    color="warn"
+                  >
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                  <button mat-icon-button matTooltip="Télécharger">
+                    <mat-icon>download</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="kycColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: kycColumns;"></tr>
+            </table>
+          </div>
+          <div *ngIf="kycDocuments.length === 0" class="empty-message">
+            <mat-icon>inbox</mat-icon>
+            <p>Aucun document KYC</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- ====== ONGLET 4: CONSENTEMENTS ====== -->
+    <mat-tab label="Consentements">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">assignment</mat-icon>
+        <span>Consentements ({{ consents.length }})</span>
+      </ng-template>
+
+      <mat-card class="consents-card">
+        <mat-card-content>
+          <div *ngIf="consents.length > 0" class="table-wrapper">
+            <table mat-table [dataSource]="consents" class="consents-table">
+              <!-- Colonne: Type -->
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+              </ng-container>
+
+              <!-- Colonne: Statut -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Statut</th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-chip [color]="getConsentStatusColor(element.status)" selected>
+                    {{ element.status | uppercase }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Colonne: Date Création -->
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>Date Création</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.createdAt | date: 'short' }}
+                </td>
+              </ng-container>
+
+              <!-- Colonne: Expiration -->
+              <ng-container matColumnDef="expiresAt">
+                <th mat-header-cell *matHeaderCellDef>Expiration</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.expiresAt | date: 'short' }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="consentsColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: consentsColumns;"></tr>
+            </table>
+          </div>
+          <div *ngIf="consents.length === 0" class="empty-message">
+            <mat-icon>inbox</mat-icon>
+            <p>Aucun consentement</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<!-- ====== FOOTER DIALOGUE ====== -->
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Fermer</button>
+</div>

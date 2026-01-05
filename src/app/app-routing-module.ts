@@ -24,6 +24,15 @@ const routes: Routes = [
 
   },
   {
+    path: 'agent',
+    loadComponent: () =>
+      import('./layout/agent-layout/agent-layout.component')
+        .then(c => c.AgentLayoutComponent),
+    loadChildren: () =>
+      import('./features/agent/agent-routing.module')
+        .then(m => m.AgentRoutingModule)
+  },
+  {
     path: 'client',
     loadComponent: () =>
       import('./layout/sidebar-client/sidebar-client.component')
@@ -32,7 +41,8 @@ const routes: Routes = [
       import('./features/client/client-routing.module')
         .then(m => m.ClientRoutingModule)
   },
-  { path: '', redirectTo: '/admin', pathMatch: 'full' },
+  // ====== REDIRECTION PAR DÉFAUT VERS L'AGENT ======
+  { path: '', redirectTo: '/agent', pathMatch: 'full' },
   { path: 'profile', component: ProfileComponent },
   { path: 'recharge', component: RechargeComponent }
 ];
