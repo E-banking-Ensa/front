@@ -40,15 +40,15 @@ export class ClientService {
    // Données mockées - à remplacer par des appels HTTP
     private mockClient: ClientDto = {
       clientId: 'CL100001',
-  username: 'client1',
-  email: 'client1@test.com',
-  phoneNumber: '0612345678',
-  adresse: 'Casablanca',
-  firstName: 'client',
-  lastName: '1',
-  kycStatus: 'VERIFIED',
-  createdAt: new Date('2024-01-01'),
-  status: 'Active',
+      username: 'client1',
+      email: 'client1@test.com',
+      phoneNumber: '0612345678',
+      adresse: 'Casablanca',
+      firstName: 'client',
+      lastName: '1',
+      kycStatus: 'VERIFIED',
+      createdAt: new Date('2024-01-01'),
+      status: 'Active',
       accounts: [
         {
           accountId: 1,
