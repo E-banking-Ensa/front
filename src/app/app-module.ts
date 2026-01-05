@@ -11,6 +11,7 @@ import { authInterceptor } from './core/auth/auth.interceptor';
 import { ProfileComponent } from './layout/profile/profile.component';
 import { RechargeComponent } from './layout/recharge/recharge.component';
 
+
 @NgModule({
   declarations: [
     App,
