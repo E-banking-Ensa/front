@@ -1,13 +1,13 @@
+// ================================================
+// sidebar-client.component.ts
+// ================================================
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatMenuModule } from '@angular/material/menu';
 
 interface MenuItem {
   icon: string;
@@ -24,18 +24,11 @@ interface MenuItem {
     CommonModule,
     RouterModule,
     MatSidenavModule,
-    MatToolbarModule,
     MatListModule,
-    MatIconModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatMenuModule
+    MatIconModule
   ]
 })
 export class SidebarClientComponent {
-  currentUser = 'Client User';
-  isSidenavExpanded = false;
-
   menuItems: MenuItem[] = [
     { icon: 'dashboard', label: 'Dashboard', route: '/client/dashboard' },
     { icon: 'sync_alt', label: 'Transfert Mony', route: '/client/transfert-money' },
@@ -45,10 +38,6 @@ export class SidebarClientComponent {
   ];
 
   constructor(private router: Router) {}
-
-  toggleSidenav(): void {
-    this.isSidenavExpanded = !this.isSidenavExpanded;
-  }
 
   isActive(route: string): boolean {
     return this.router.url === route;

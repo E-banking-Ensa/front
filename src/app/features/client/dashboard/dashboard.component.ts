@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-
 import { ClientService } from '../../../core/services/clients.service';
 import { ClientDTOS } from '../../../core/models/ClientDTOS';
 import { AccountDTO } from '../../../core/models/AccountDTO';
@@ -26,13 +25,10 @@ import { TransactionDTO } from '../../../core/models/TransactionDTO';
   ]
 })
 export class ClientDashboardComponent implements OnInit {
-
   currentClient: ClientDTOS | null = null;
   accounts: AccountDTO[] = [];
   recentTransactions: TransactionDTO[] = [];
-
-  hoveredAccountId: number | null = null;
-  selectedAccountId: number | null = null; // pour le clic
+  selectedAccountId: number | null = null;
 
   constructor(
     private clientService: ClientService,
@@ -43,31 +39,28 @@ export class ClientDashboardComponent implements OnInit {
     this.clientService.getCurrentClient().subscribe(client => {
       this.currentClient = client;
       this.accounts = client.accounts;
+
+      // Sélectionner la première carte par défaut
+      if (this.accounts.length > 0) {
+        this.selectedAccountId = this.accounts[0].accountId;
+      }
+
       this.loadRecentTransactions();
       this.cd.detectChanges();
     });
   }
 
-  // ===================== HOVER =====================
-  onAccountHover(accountId: number): void {
-    this.hoveredAccountId = accountId;
-  }
-
-  onAccountLeave(): void {
-    this.hoveredAccountId = null;
-  }
-
-  getHoveredTransactions(): TransactionDTO[] {
-    const account = this.accounts.find(a => a.accountId === this.hoveredAccountId);
-    return account ? account.transactions : [];
-  }
-
-  // ===================== CLICK =====================
+  // ===================== SELECTION =====================
   selectAccount(accountId: number): void {
     this.selectedAccountId = accountId;
   }
 
+  isAccountSelected(accountId: number): boolean {
+    return this.selectedAccountId === accountId;
+  }
+
   getSelectedTransactions(): TransactionDTO[] {
+    if (!this.selectedAccountId) return [];
     const account = this.accounts.find(a => a.accountId === this.selectedAccountId);
     return account ? account.transactions : [];
   }
@@ -92,4 +85,19 @@ export class ClientDashboardComponent implements OnInit {
   formatDate(date: string): string {
     return new Date(date).toLocaleDateString('fr-FR');
   }
+
+
+
+  getStatusColor(status: string): string {
+  const colors: { [key: string]: string } = {
+    'ACTIVE': '#78f4acff',
+    'INACTIVE': '#dadadaff',
+    'SUSPENDED': '#F5C36B',
+    'PENDING': '#71d4ffff',
+    'CLOSED': '#f77979ff'
+  };
+  return colors[status] || '#6c757d';
+}
+
+
 }

@@ -1,150 +1,171 @@
+// ================================================
+// sidebar-client.component.scss
+// ================================================
+
 .sidenav-container {
   height: 100vh;
   width: 100%;
 }
 
 .sidenav {
-  width: 80px;
+  width: 240px;
   background-color: #ffffff;
-  border-right: 1px solid #e8eaed;
-  transition: width 0.3s ease;
-  overflow-x: hidden;
+  border-right: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
-
-  &.expanded {
-    width: 240px;
-  }
+  padding: 0;
 
   // Logo Section
   .logo-section {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 20px 16px;
-    min-height: 64px;
+    gap: 8px;
+    padding: 24px 16px;
+    margin-bottom: 8px;
 
     .logo-icon {
-      color: #4a90e2;
-      font-size: 32px;
-      width: 32px;
-      height: 32px;
+      color: #3b82f6;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
       flex-shrink: 0;
-      margin-left: 8px;
     }
 
     .logo-text {
-      font-size: 20px;
-      font-weight: 700;
-      color: #2c3e50;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
       white-space: nowrap;
     }
   }
 
-  // Navigation List
+  // Navigation List - Sidebar Navigation Items
+  // Chaque élément est un "Menu Item avec état actif"
   .nav-list {
     flex: 1;
-    padding-top: 16px;
+    padding: 0 12px;
 
     .nav-item {
+      // Sidebar Navigation Item avec fond blanc, bordure visible et arrondie
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       padding: 12px 16px;
-      margin: 4px 8px;
-      border-radius: 12px;
+      margin-bottom: 8px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      color: #5f6368;
+      transition: all 0.25s ease;
+      color: #4b5563;
       text-decoration: none;
-      min-height: 48px;
+      height: 48px;
+      position: relative;
+      background-color: #ffffff;
+      border: 1px solid #e5e7eb;
 
       .nav-icon {
-        font-size: 24px;
-        width: 24px;
-        height: 24px;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
         flex-shrink: 0;
-        margin-left: 8px;
+        color: inherit;
+        transition: color 0.25s ease;
       }
 
       .nav-label {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 500;
         white-space: nowrap;
+        color: inherit;
+        transition: color 0.25s ease;
       }
 
-      &:hover {
-        background-color: #f1f3f4;
-        color: #4a90e2;
+      &:hover:not(.active) {
+        background-color: #f9fafb;
+        border-color: #d1d5db;
+        color: #374151;
       }
 
       &.active {
-        background-color: #e8f4fd;
-        color: #4a90e2;
-        font-weight: 600;
+        // État actif du Menu Item (ex: Dashboard)
+        // Fond bleu très clair avec bordure bleue douce
+        background-color: #eff6ff;
+        border: 1px solid #93c5fd;
+        color: #2563eb;
 
         .nav-icon {
-          color: #4a90e2;
+          color: #2563eb;
+        }
+
+        .nav-label {
+          color: #2563eb;
         }
       }
     }
   }
 
-  // Logout Section
-  .logout-section {
-    margin-top: auto;
-    padding-bottom: 16px;
+  // Logout Button
+  .logout-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin: 16px 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: #ef4444;
+    height: 48px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    width: calc(100% - 24px);
 
-    .logout-button {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 12px 16px;
-      margin: 8px 8px 0;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      color: #e74c3c;
-      min-height: 48px;
+    .nav-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: #ef4444;
+      transition: color 0.25s ease;
+    }
 
-      .logout-icon {
-        font-size: 24px;
-        width: 24px;
-        height: 24px;
-        flex-shrink: 0;
-        margin-left: 8px;
+    .nav-label {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      color: #ef4444;
+      transition: color 0.25s ease;
+    }
+
+    &:hover {
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      color: #dc2626;
+
+      .nav-icon {
+        color: #dc2626;
       }
 
       .nav-label {
-        font-size: 15px;
-        font-weight: 500;
-        white-space: nowrap;
-      }
-
-      &:hover {
-        background-color: #fef5f5;
-        color: #c0392b;
+        color: #dc2626;
       }
     }
-  }
-
-  mat-divider {
-    margin: 8px 0;
   }
 }
 
 .main-content {
-  background-color: #f5f6fa;
+  background-color: #f9fafb;
   overflow-x: hidden;
 }
 
-// Responsive Design
-@media (max-width: 768px) {
-  .sidenav {
-    width: 80px;
-
-    &.expanded {
-      width: 200px;
+// Remove default Material styles
+::ng-deep {
+  .mat-mdc-list-item {
+    &:hover {
+      background-color: transparent !important;
     }
+  }
+
+  .mat-mdc-list-item-interactive::before {
+    background-color: transparent !important;
   }
 }

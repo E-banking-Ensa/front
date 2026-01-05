@@ -1,16 +1,11 @@
 <div class="dashboard-container">
-
   <!-- ================= HEADER ================= -->
   <div class="dashboard-header">
-
     <div>
       <h1>
-        Welcome back,
-        {{ currentClient?.firstName || 'client' }}{{ currentClient?.lastName?.charAt(0) || '1' }}
+        Welcome back, {{ currentClient?.firstName || 'client' }}{{ currentClient?.lastName?.charAt(0) || '' }}
       </h1>
-
       <p>Here is a summary of your account for today.</p>
-
       <div class="client-meta">
         <div class="client-badge">
           <mat-icon>badge</mat-icon>
@@ -18,16 +13,13 @@
         </div>
       </div>
     </div>
-
     <div class="status-badge">
       <span class="status-dot"></span>
       Status : Active
     </div>
-
   </div>
 
-
-    <!-- ================= CREATE BUTTON ================= -->
+  <!-- ================= CREATE BUTTON ================= -->
   <div style="display: flex; justify-content: flex-end; margin-bottom: 32px;">
     <button class="create-btn">
       <mat-icon>add</mat-icon>
@@ -35,23 +27,21 @@
     </button>
   </div>
 
+  <!-- ================= ACCOUNTS CAROUSEL ================= -->
+  <div class="accounts-carousel">
+    <mat-card
+      class="account-card"
+      *ngFor="let account of accounts"
+      [class.selected]="isAccountSelected(account.accountId)"
+      (click)="selectAccount(account.accountId)">
 
- <!-- ================= ACCOUNTS ================= -->
-<div class="accounts">
-
-  <mat-card
-    class="account-card"
-    *ngFor="let account of accounts"
-    (mouseenter)="onAccountHover(account.accountId)"
-    (mouseleave)="onAccountLeave()">
-
-    <div class="account-header">
+      <div class="account-header">
         <mat-icon>account_balance_wallet</mat-icon>
         Compte {{ account.accountId }}
       </div>
 
       <div class="account-row">
-        <span>RIP</span>
+        <span>RIB</span>
         <strong>{{ account.rib }}</strong>
       </div>
 
@@ -67,68 +57,63 @@
 
       <div class="account-row">
         <span>Status</span>
-        <span class="badge badge-yellow">{{ account.accountStatus }}</span>
+       <!--<span class="badge badge-yellow">{{ account.accountStatus }}</span>-->
+          <span
+            class="badge badge-status"
+            [style.background-color]="getStatusColor(account.accountStatus)">
+            {{ account.accountStatus }}
+         </span>
       </div>
 
       <div class="upload-box">
         <mat-icon>cloud_upload</mat-icon>
         Upload receipt
       </div>
+    </mat-card>
+  </div>
 
-  </mat-card>
+  <!-- ================= RECENT TRANSACTIONS ================= -->
+  <h2>Transactions du compte sélectionné</h2>
 
-</div>
+  <div class="transactions">
+    <div *ngFor="let t of getSelectedTransactions()" class="transaction-item">
+      <div class="transaction-left">
+        <div
+          class="transaction-icon"
+          [ngClass]="{
+            'icon-green': t.montant > 0,
+            'icon-red': t.montant < 0
+          }">
+          <mat-icon>
+            {{ t.montant > 0 ? 'south' : 'north' }}
+          </mat-icon>
+        </div>
+        <div>
+          <div class="transaction-title">
+            {{ t.typeTransaction }}
+          </div>
+          <div class="transaction-subtitle">
+            {{ t.montant > 0 ? 'Transaction entrante' : 'Transaction sortante' }}
+          </div>
+        </div>
+      </div>
 
-<!-- ================= RECENT TRANSACTIONS ================= -->
-<h2>Transactions du compte sélectionné</h2>
+      <div class="transaction-date">
+        {{ formatDate(t.date) }}
+      </div>
 
-<div class="transactions">
-
-  <div
-    *ngFor="let t of getHoveredTransactions()"
-    class="transaction-item">
-
-    <div class="transaction-left">
       <div
-        class="transaction-icon"
         [ngClass]="{
-          'icon-green': t.montant > 0,
-          'icon-red': t.montant < 0
+          'amount-positive': t.montant > 0,
+          'amount-negative': t.montant < 0
         }">
-
-        <mat-icon>
-          {{ t.montant > 0 ? 'south' : 'north' }}
-        </mat-icon>
-
-      </div>
-
-      <div>
-        <div class="transaction-title">
-          {{ t.typeTransaction }}
-        </div>
-        <div class="transaction-subtitle">
-          {{ t.montant > 0 ? 'Transaction entrante' : 'Transaction sortante' }}
-        </div>
+        {{ formatAmount(t.montant) }}
       </div>
     </div>
 
-    <div class="transaction-date">
-      {{ formatDate(t.date) }}
+    <!-- EMPTY STATE -->
+    <div *ngIf="getSelectedTransactions().length === 0" class="empty-state">
+      Aucune transaction
     </div>
-
-    <div
-      [ngClass]="{
-        'amount-positive': t.montant > 0,
-        'amount-negative': t.montant < 0
-      }">
-      {{ formatAmount(t.montant) }}
-    </div>
-
   </div>
-
-  <!-- EMPTY STATE -->
-  <div *ngIf="getHoveredTransactions().length === 0">
-    Aucune transaction
-  </div>
-
 </div>
