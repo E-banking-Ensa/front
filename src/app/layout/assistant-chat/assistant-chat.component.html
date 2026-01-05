@@ -1,0 +1,44 @@
+<div class="assistant-container">
+
+  <!-- HEADER -->
+  <header class="assistant-header">
+    <div class="title">
+      <div class="icon">✨</div>
+      <div>
+        <h2>Assistant Bancaire</h2>
+        <span>Toujours à votre service</span>
+      </div>
+    </div>
+    <div class="status">
+      <span class="dot"></span> En ligne
+    </div>
+  </header>
+
+  <!-- CHAT MESSAGES -->
+  <div class="chat-box">
+    <div
+      *ngFor="let msg of messages"
+      class="message"
+      [class.user]="msg.from === 'user'"
+      [class.ai]="msg.from === 'ai'"
+    >
+      <p>{{ msg.text }}</p>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  
+
+  <!-- INPUT -->
+  <form class="input-area" [formGroup]="chatForm" (ngSubmit)="sendMessage()">
+    <input
+      type="text"
+      formControlName="message"
+      placeholder="Posez votre question..."
+    />
+    <button type="submit" [disabled]="chatForm.invalid">➤</button>
+  </form>
+
+  <p class="footer">Vos données sont sécurisées et confidentielles</p>
+
+</div>

@@ -1,0 +1,93 @@
+.account-type-container {
+  padding: 40px;
+  text-align: center;
+  background: #f5f7fb;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header .icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+  color: #2563eb;
+}
+
+.header h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.header p {
+  color: #6b7280;
+  margin-bottom: 40px;
+}
+
+/* CARDS */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 25px;
+  text-align: left;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+/* CARD ACTIVE (BLEU) */
+.card.active {
+  border-color: #2563eb;
+  background: #eef2ff;
+}
+
+.card h2 {
+  margin-bottom: 10px;
+}
+
+.card .desc {
+  color: #6b7280;
+  margin-bottom: 15px;
+}
+
+.card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.card ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* TITRES BLEUS */
+.checking h2 { color: #2563eb; }
+.savings h2 { color: #1d4ed8; }
+.business h2 { color: #3b82f6; }
+.investment h2 { color: #6366f1; }
+
+/* BOUTON BLEU */
+.continue-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  font-size: 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.continue-btn:hover {
+  background: #4058a7ff;
+}

@@ -1,0 +1,65 @@
+<div class="account-type-container">
+
+  <div class="header">
+    <div class="icon">🛡️</div>
+    <h1>Choose Your Account Type</h1>
+    <p>Select the account that best fits your needs</p>
+  </div>
+
+  <div class="cards">
+
+    <div class="card checking"
+         [class.active]="selectedType === 'CHECKING'"
+         (click)="selectType('CHECKING')">
+      <h2>Checking Account</h2>
+      <p class="desc">For your daily transactions and payments</p>
+      <ul>
+        <li>✔ International debit card</li>
+        <li>✔ Checkbook included</li>
+        <li>✔ Unlimited transfers</li>
+      </ul>
+    </div>
+
+    <div class="card savings"
+         [class.active]="selectedType === 'SAVINGS'"
+         (click)="selectType('SAVINGS')">
+      <h2>Savings Account</h2>
+      <p class="desc">Grow your savings with competitive interest rates</p>
+      <ul>
+        <li>✔ Attractive interest rate</li>
+        <li>✔ Monthly capitalization</li>
+        <li>✔ Instant availability</li>
+      </ul>
+    </div>
+
+    <div class="card business"
+         [class.active]="selectedType === 'BUSINESS'"
+         (click)="selectType('BUSINESS')">
+      <h2>Business Account</h2>
+      <p class="desc">Designed for professionals and companies</p>
+      <ul>
+        <li>✔ Business tools included</li>
+        <li>✔ Merchant services</li>
+        <li>✔ Dedicated support</li>
+      </ul>
+    </div>
+
+    <div class="card investment"
+         [class.active]="selectedType === 'INVESTMENT'"
+         (click)="selectType('INVESTMENT')">
+      <h2>Investment Account</h2>
+      <p class="desc">Build your portfolio and invest smartly</p>
+      <ul>
+        <li>✔ Investment opportunities</li>
+        <li>✔ Portfolio management</li>
+        <li>✔ Expert advice</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <button class="continue-btn" (click)="continue()">
+    Continue with {{ selectedType }} Account
+  </button>
+
+</div>
