@@ -31,11 +31,8 @@ export class AuthService {
     constructor(private http: HttpClient) { }
 
     login(credentials: LoginRequest): Observable<any> {
-        return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
+        return this.http.post(`${this.apiUrl}/api/auth/login`, credentials).pipe(
             tap((response: any) => {
-                // Assuming the response contains an access_token or similiar
-                // Adjust based on actual API response structure. 
-                // If response is just { access_token: "..." }
                 if (response && response.access_token) {
                     this.saveToken(response.access_token);
                 } else if (response && response.token) {
@@ -46,31 +43,25 @@ export class AuthService {
     }
 
     register(data: SignupRequest): Observable<any> {
-        return this.http.post(`${this.apiUrl}/logup`, data);
+        return this.http.post(`${this.apiUrl}/api/auth/logup`, data);
     }
 
     recoverPassword(data: { email?: string, username?: string }): Observable<any> {
-        return this.http.post(`${this.apiUrl}/password/recover`, data);
+        return this.http.post(`${this.apiUrl}/api/auth/password/recover`, data);
     }
 
     logout(): Observable<any> {
-        // API requires X-Refresh-Token header if available, but for now we just handle local logout primarily
-        // If backend requires a call:
         const headers = new HttpHeaders({
-            // 'X-Refresh-Token': this.getRefreshToken() // If we had one
+            'X-Refresh-Token': 'refresh_token_placeholder' // TODO: Get actual refresh token from storage
         });
-
-        // We can fire and forget or wait
-        return this.http.post(`${this.apiUrl}/logout`, {}, { headers }).pipe(
+        return this.http.post(`${this.apiUrl}/api/auth/logout`, {}, { headers }).pipe(
             tap(() => this.clearSession()),
-            // Catch error to ensure local logout happens anyway
             tap({ error: () => this.clearSession() })
         );
     }
 
-    me(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/api/auth/me`);
-    }
+    // me() endpoint not available in OpenAPI spec
+    // me(): Observable<any> { ... }
 
     // Token Management
     saveToken(token: string): void {

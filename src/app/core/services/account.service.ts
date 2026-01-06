@@ -3,13 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { AccountDTO } from '../models/AccountDTO ';
 
+/**
+ * NOTE: The openapi.yml does not define endpoints for account management.
+ * This service uses mock data until the backend API is extended.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
   private baseUrl = '......'; // à définir plus tard pour le microservice
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Récupérer les comptes d'un client
   getAccounts(clientId: string): Observable<AccountDTO[]> {
@@ -55,7 +59,7 @@ export class AccountService {
   }
 
   //faire recuprer le nombre des accounts
-  getNbrAccounts():Observable<number>{
+  getNbrAccounts(): Observable<number> {
     // Quand le backend sera prêt, remplacer par:
     // return this.http.get<AccountDTO[]>(`${this.baseUrl}/clients/${clientId}/accounts`);
     return of(100);

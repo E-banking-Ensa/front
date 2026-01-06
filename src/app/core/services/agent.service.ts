@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AgentDto } from '../models/AgentDto';
+import { environment } from '../../../environments/environment';
 import { CreateUserRequestDto } from '../models/CreateUserRequestDto';
 import { UserResponseDto } from '../models/UserResponseDto';
 import { DashbordAgent } from '../models/DashbordAgent';
@@ -11,7 +12,7 @@ import { DashbordAgent } from '../models/DashbordAgent';
 })
 export class AgentService {
 
-  private baseUrl = 'http://localhost:8080/api/v1/users';
+  private baseUrl = `${environment.apiUrl}/api/users`;
 
   constructor(private http: HttpClient) { }
 
@@ -22,53 +23,41 @@ export class AgentService {
     return this.http.get<AgentDto[]>(`${this.baseUrl}/allAgents`);
   }
 
-  /*recuperer les consnets d'un el client
-
-  */
   /**
-   * Créer un nouvel agent
-   * POST /api/v1/users/internal/sync
+   * Créer un nouvel agent (via sync internal/sync as per existing logic, verify if correct - assumes auth service syncs)
+   * POST /api/users/internal/sync
    */
   createAgent(request: CreateUserRequestDto): Observable<UserResponseDto> {
-    return this.http.post<UserResponseDto>(`${this.baseUrl}/internal/sync`,request);
+    return this.http.post<UserResponseDto>(`${this.baseUrl}/internal/sync`, request);
   }
 
   /**
    * Supprimer un agent
-   * DELETE /api/v1/users/agents/{agentId}
+   * DELETE /api/users/agents/{agentId}/delete
    */
   deleteAgent(agentId: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/agents/${agentId}/delete`);
   }
- 
-
-  activate(agentId:string):Observable<void>{
-    return this.http.put<void>(`${this.baseUrl}/agents/${agentId}/activate`,{});
-  }
-  
 
   /**
    * Activer un agent
-   * PUT /api/v1/users/agents/{agentId}/activate
+   * PUT /api/users/agents/{agentId}/activate
    */
-  // activateAgent(agentId: string): Observable<void> {
-  //   return this.http.put<void>(`${this.baseUrl}/agents/${agentId}/activate`, {});
-  // }
-
-  desactivate(agentId: string): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/agents/${agentId}/desactivate`, {});
+  activate(agentId: string): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/agents/${agentId}/activate`, {});
   }
+
   /**
    * Désactiver un agent
-   * PUT /api/v1/users/agents/{agentId}/deactivate
+   * PUT /api/users/agents/{agentId}/desactivate
    */
-  deactivateAgent(agentId: string): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/agents/${agentId}/deactivate`, {});
+  desactivate(agentId: string): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/agents/${agentId}/desactivate`, {});
   }
 
   /**
    * Bloquer un agent
-   * PUT /api/v1/users/agents/{agentId}/block
+   * PUT /api/users/agents/{agentId}/block
    */
   suspendre(agentId: string): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/agents/${agentId}/block`, {});
