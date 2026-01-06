@@ -1,3 +1,132 @@
-<h2>{{ title }}</h2>
-<p>Numéro : {{ phoneNumber }}</p>
-<p>Montant : {{ amount }} €</p>
+<div class="w-full h-full min-h-screen" [style.background]="bodyBackground">
+  <div class="max-w-2xl mx-auto p-6" [style.font-family]="config.font_family">
+
+    <div class="rounded-2xl shadow-xl p-6 mb-6 text-center" [style.background-color]="config.card_color">
+      <div class="text-5xl mb-3">📱</div>
+      <h1 class="font-bold mb-2" [style.color]="config.text_color" [style.font-size.px]="config.font_size * 1.875">
+        {{ config.page_title }}
+      </h1>
+      <p [style.color]="config.text_color" [style.font-size.px]="config.font_size">
+        {{ config.subtitle }}
+      </p>
+    </div>
+
+    <div class="rounded-2xl shadow-xl p-8" [style.background-color]="config.card_color">
+      <form [formGroup]="rechargeForm" (ngSubmit)="onSubmit()">
+
+        <div class="grid grid-cols-3 gap-4">
+          <div *ngFor="let op of operators"
+               class="operator-card border-2 rounded-xl p-4 text-center border-gray-200 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 hover:shadow-lg bg-white"
+               [class.selected]="selectedOperator === op.name"
+               [style.border-color]="selectedOperator === op.name ? config.primary_color : '#e5e7eb'"
+               [style.background-color]="selectedOperator === op.name ? '#eff6ff' : 'white'"
+               (click)="selectOperator(op.name)">
+
+            <img [src]="op.logo" [alt]="op.name"
+                 class="h-12 w-auto object-contain mb-3">
+
+            <div class="font-bold text-gray-700 text-sm">{{ op.name }}</div>
+          </div>
+        </div>
+
+
+        <div class="mb-6">
+          <label for="phone-number" class="block font-bold mb-2" [style.color]="config.text_color" [style.font-size.px]="config.font_size * 0.875">
+            Numéro de téléphone
+          </label>
+          <input type="tel" id="phone-number" formControlName="phone"
+                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500"
+                 [style.font-size.px]="config.font_size"
+                 placeholder="+212 6 80 62 27 93">
+        </div>
+
+        <div class="mb-6">
+          <label class="block font-bold mb-3" [style.color]="config.text_color" [style.font-size.px]="config.font_size * 0.875">
+            Montant de la recharge
+          </label>
+          <div class="grid grid-cols-3 gap-3 mb-4">
+            <button type="button" *ngFor="let amt of presetAmounts"
+                    class="amount-btn border-2 border-gray-300 rounded-xl py-4 font-bold text-gray-700"
+                    [class.selected]="selectedAmount === amt"
+                    [style.background]="selectedAmount === amt ? 'linear-gradient(135deg, ' + config.primary_color + ' 0%, #2563eb 100%)' : ''"
+                    [style.border-color]="selectedAmount === amt ? config.primary_color : ''"
+                    [style.color]="selectedAmount === amt ? 'white' : ''"
+                    [style.font-size.px]="config.font_size"
+                    (click)="selectPresetAmount(amt)">
+              {{ amt }} MAD
+            </button>
+          </div>
+          <div>
+            <label for="custom-amount" class="block text-xs font-semibold text-gray-600 mb-2" [style.font-size.px]="config.font_size * 0.75">
+              Ou montant personnalisé
+            </label>
+            <input type="number" id="custom-amount" formControlName="customAmount"
+                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500"
+                   [style.font-size.px]="config.font_size"
+                   placeholder="Entrez un montant" min="1" max="500"
+                   (input)="onCustomAmountInput($event)">
+          </div>
+        </div>
+
+        <div *ngIf="selectedOperator || rechargeForm.get('phone')?.value || currentAmount > 0"
+             class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-6">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-gray-600 font-medium" [style.font-size.px]="config.font_size">Opérateur:</span>
+            <span class="font-bold text-gray-800" [style.font-size.px]="config.font_size">{{ selectedOperator || '-' }}</span>
+          </div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-gray-600 font-medium" [style.font-size.px]="config.font_size">Numéro:</span>
+            <span class="font-bold text-gray-800" [style.font-size.px]="config.font_size">{{ rechargeForm.get('phone')?.value || '-' }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600 font-medium" [style.font-size.px]="config.font_size">Montant:</span>
+            <span class="font-bold text-xl" [style.color]="config.primary_color" [style.font-size.px]="config.font_size * 1.25">
+              {{ currentAmount }} MAD
+            </span>
+          </div>
+        </div>
+
+        <div *ngIf="showStatus" class="mb-4 p-4 rounded-xl text-sm font-medium"
+             [ngClass]="{'bg-red-100 text-red-700': isError, 'bg-green-100 text-green-700': !isError}">
+          {{ statusMessage }}
+        </div>
+
+        <button type="submit" [disabled]="isLoading"
+                class="recharge-btn w-full text-white font-bold py-4 rounded-xl text-lg hover:opacity-90 transition-all"
+                [style.background-color]="config.accent_color"
+                [style.font-size.px]="config.font_size * 1.125">
+          {{ isLoading ? '⏳ Recharge en cours...' : config.button_text }}
+        </button>
+      </form>
+    </div>
+
+    <div class="rounded-2xl shadow-xl p-6 mt-6" [style.background-color]="config.card_color">
+      <h2 class="font-bold text-gray-800 mb-4" [style.font-size.px]="config.font_size * 1.25">📋 Historique des recharges</h2>
+
+      <div class="space-y-3">
+        <p *ngIf="history.length === 0" class="text-gray-500 text-center py-4" [style.font-size.px]="config.font_size">
+          Aucune recharge effectuée
+        </p>
+
+        <div *ngFor="let item of sortedHistory" class="border-2 border-gray-100 rounded-xl p-4 hover:bg-gray-50 transition">
+          <div class="flex justify-between items-center">
+            <div>
+              <div class="font-bold text-gray-800" [style.font-size.px]="config.font_size">
+                {{ item.operator }} - {{ item.phone_number }}
+              </div>
+              <div class="text-sm text-gray-500" [style.font-size.px]="config.font_size * 0.875">
+                {{ item.transaction_date | date:'dd/MM/yyyy HH:mm' }}
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="font-bold text-xl" [style.color]="config.accent_color" [style.font-size.px]="config.font_size * 1.25">
+                {{ item.amount }} €
+              </div>
+              <div class="text-xs" [style.color]="config.accent_color">✓ {{ item.status }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
