@@ -1,0 +1,809 @@
+$primary-blue: #1A73E8;
+$badge-green: #28a745;
+$card-mint: #F0F9F4;
+/* Light mint/green for header card */
+$text-dark: #333;
+$text-muted: #666;
+$border-light: #eee;
+
+.crypto-dashboard-container {
+  padding: 24px;
+  background-color: #f8f9fa;
+  /* Light grey background for the whole page */
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Welcome Header */
+.welcome-header {
+  background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+  border-radius: 16px;
+  padding: 32px;
+  color: white;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  box-shadow: 0 4px 12px rgba(21, 101, 192, 0.2);
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+  }
+
+  .text-content {
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      margin: 0 0 16px 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+  }
+
+  .client-id-badge {
+    background: rgba(255, 255, 255, 0.2);
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+    }
+  }
+
+  .status-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+
+    &.active {
+      background: #28a745;
+      /* Green for active */
+      color: white;
+    }
+  }
+}
+
+/* Nav Tabs */
+.nav-tabs {
+  background: white;
+  border-radius: 50px;
+  /* Pill shape container */
+  padding: 8px;
+  display: inline-flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  .tab-item {
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: $text-muted;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    &.active {
+      background-color: #fefefe;
+      /* Just a slight diff or maybe none based on image? */
+      /* Actually in the image, "Aperçu" looks like it has a white bg and shadow, while others are flat on the grey bar? 
+         Let's assume the container is light grey and active is white. */
+      color: #333;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background-color: white;
+    }
+  }
+}
+
+/* Override nav-tabs based on updated observation of Image 2 */
+/* The tabs look like individual buttons row. */
+.nav-tabs {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+
+  .tab-item {
+    background: white;
+    margin-right: 12px;
+    border-radius: 30px;
+    padding: 10px 24px;
+    color: #444;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    &.active {
+      background: white;
+      /* Image doesn't show strong color contrast for active, maybe bold text */
+      font-weight: 700;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+    }
+  }
+}
+
+
+/* Dashboard Content */
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Total Value Card */
+.total-value-card {
+  background-color: #f0fdf4;
+  /* Very light green similar to screenshot */
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #dcfce7;
+
+  .card-header {
+    margin-bottom: 16px;
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111;
+      margin: 0;
+    }
+
+    p {
+      margin: 4px 0 0 0;
+      color: $text-muted;
+      font-size: 13px;
+    }
+  }
+
+  .value-display {
+    font-size: 32px;
+    font-weight: 800;
+    color: #111;
+  }
+}
+
+/* Crypto Grid */
+.crypto-grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+
+  .crypto-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    flex: 1;
+    min-width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+
+      .asset-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .asset-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+        .asset-names {
+          h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+          }
+
+          .symbol {
+            color: $text-muted;
+            font-size: 13px;
+            text-transform: uppercase;
+          }
+        }
+      }
+
+      .asset-change {
+        display: flex;
+        align-items: center;
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          margin-right: 2px;
+        }
+
+        &.positive {
+          background-color: #e6f4ea;
+          color: #1e8e3e;
+        }
+
+        &.negative {
+          background-color: #fce8e6;
+          color: #d93025;
+        }
+      }
+    }
+
+    .price-section {
+      margin-bottom: 24px;
+
+      .main-price {
+        font-size: 24px;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 4px;
+      }
+
+      .label {
+        font-size: 13px;
+        color: $text-muted;
+      }
+    }
+
+    .divider {
+      height: 1px;
+      background-color: $border-light;
+      margin-bottom: 24px;
+    }
+
+    .balance-section {
+      .label {
+        font-size: 13px;
+        color: $text-muted;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .crypto-balance {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .fiat-balance {
+        font-size: 13px;
+        color: $text-muted;
+      }
+    }
+  }
+}
+
+/* Buy Crypto Content */
+.buy-crypto-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+
+  .buy-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    /* max-width: 600px; Remove max-width if it should take full width or adjust as needed */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 32px;
+      gap: 16px;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: #111;
+        /* Or specific color from image */
+        margin-top: 4px;
+      }
+
+      .header-text {
+        h3 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+          font-weight: 700;
+          color: #111;
+        }
+
+        p {
+          margin: 0;
+          color: $text-muted;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .form-container {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-weight: 600;
+        font-size: 14px;
+        color: #111;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .full-width {
+        width: 100%;
+        margin-bottom: 8px;
+        /* Spacing between field and next label/helper */
+      }
+
+      /* Customize Angular Material Form Field to look like the image (rounded, light border) */
+      ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+        color: #ddd;
+      }
+
+      ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+        color: $primary-blue;
+      }
+
+      ::ng-deep .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+
+      .helper-text {
+        color: $text-muted;
+        font-size: 13px;
+        margin-top: -4px;
+        /* Move closer to input if needed */
+        margin-bottom: 24px;
+      }
+
+      .btn-buy {
+        width: 100%;
+        padding: 24px;
+        /* Taller button */
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        background-color: #1976D2;
+        /* Match primary blue */
+        box-shadow: none;
+        /* Flat look is common */
+        line-height: normal;
+        /* Fix alignment with padding */
+
+        /* Ensure content is centered */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white !important;
+      }
+    }
+  }
+}
+
+/* Convert Crypto Content */
+.convert-crypto-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+
+  .convert-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 32px;
+      gap: 16px;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: #111;
+        margin-top: 4px;
+      }
+
+      .header-text {
+        h3 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+          font-weight: 700;
+          color: #111;
+        }
+
+        p {
+          margin: 0;
+          color: $text-muted;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .form-container {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-weight: 600;
+        font-size: 14px;
+        color: #111;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .full-width {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+        color: #ddd;
+      }
+
+      ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+        color: $primary-blue;
+      }
+
+      ::ng-deep .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+
+      .helper-text {
+        color: $text-muted;
+        font-size: 13px;
+        margin-top: -4px;
+        margin-bottom: 24px;
+      }
+
+      /* Estimate Card */
+      .estimate-card {
+        background-color: #e6f4ea;
+        /* Light green/mint background */
+        border: 1px solid #cce8d7;
+        /* Slightly darker green border */
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 24px;
+
+        .estimate-label {
+          font-size: 13px;
+          color: $text-muted;
+          margin-bottom: 8px;
+        }
+
+        .estimate-amount {
+          font-size: 24px;
+          font-weight: 700;
+          color: #111;
+          margin-bottom: 8px;
+        }
+
+        .estimate-note {
+          font-size: 12px;
+          color: $text-muted;
+        }
+      }
+
+      .btn-convert {
+        width: 100%;
+        padding: 24px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        background-color: #1976D2;
+        box-shadow: none;
+        line-height: normal;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white !important;
+      }
+    }
+  }
+}
+
+/* History Content */
+.history-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+
+    .header-text {
+      h3 {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+        color: #111;
+      }
+
+      p {
+        color: $text-muted;
+        font-size: 14px;
+        margin: 0;
+      }
+    }
+
+    .btn-create {
+      background-color: #28a745;
+      /* Green */
+      color: white;
+      border-radius: 8px;
+      padding: 0 24px;
+      height: 40px;
+      font-weight: 600;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        margin-right: 4px;
+      }
+    }
+  }
+
+  .table-header-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 24px;
+    margin-bottom: 12px;
+    color: $text-muted;
+    font-size: 13px;
+    font-weight: 500;
+
+    .col-type {
+      flex: 2;
+    }
+
+    .col-date {
+      flex: 1;
+      text-align: center;
+    }
+
+    .col-amount {
+      flex: 1;
+      text-align: right;
+    }
+  }
+
+  .transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .transaction-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f0f0f0;
+
+      .tx-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex: 2;
+
+        .tx-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+        .tx-details {
+          .tx-type {
+            font-weight: 700;
+            font-size: 16px;
+            color: #111;
+            margin-bottom: 2px;
+          }
+
+          .tx-desc {
+            font-size: 13px;
+            color: $text-muted;
+            text-transform: uppercase;
+          }
+        }
+      }
+
+      .tx-date {
+        flex: 1;
+        text-align: center;
+        font-size: 14px;
+        color: #555;
+      }
+
+      .tx-amount {
+        flex: 1;
+        text-align: right;
+        font-weight: 700;
+        font-size: 16px;
+
+        &.positive {
+          color: #28a745;
+        }
+
+        &.negative {
+          color: #d93025;
+        }
+      }
+    }
+  }
+}
+
+/* Transfer Crypto Content */
+.transfer-crypto-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+
+  .transfer-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    /* max-width: 600px; Remove max-width if it should take full width or adjust as needed */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 32px;
+      gap: 16px;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: #111;
+        /* Or specific color from image */
+        margin-top: 4px;
+      }
+
+      .header-text {
+        h3 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+          font-weight: 700;
+          color: #111;
+        }
+
+        p {
+          margin: 0;
+          color: $text-muted;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .form-container {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-weight: 600;
+        font-size: 14px;
+        color: #111;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .full-width {
+        width: 100%;
+        margin-bottom: 8px;
+        /* Spacing between field and next label/helper */
+      }
+
+      /* Customize Angular Material Form Field to look like the image (rounded, light border) */
+      ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+        color: #ddd;
+      }
+
+      ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+        color: $primary-blue;
+      }
+
+      ::ng-deep .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+
+      .helper-text {
+        color: $text-muted;
+        font-size: 13px;
+        margin-top: -4px;
+        /* Move closer to input if needed */
+        margin-bottom: 24px;
+      }
+
+      .btn-transfer {
+        width: 100%;
+        padding: 24px;
+        /* Taller button */
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        background-color: #1976D2;
+        /* Match primary blue */
+        box-shadow: none;
+        /* Flat look is common */
+        line-height: normal;
+        /* Fix alignment with padding */
+
+        /* Ensure content is centered */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white !important;
+      }
+    }
+  }
+}

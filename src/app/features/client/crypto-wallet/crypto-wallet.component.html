@@ -1,2 +1,226 @@
-<h2>{{ title }}</h2>
-<p>Solde : {{ balance }} {{ currency }}</p>
+<div class="crypto-dashboard-container">
+
+  <!-- Header Section -->
+  <div class="welcome-header">
+    <div class="header-content">
+      <div class="text-content">
+        <h1>Welcome back, {{ currentClient?.firstName || 'Client' }}</h1>
+        <p>Here is a summary of your crypto wallet for today.</p>
+
+        <div class="client-id-badge">
+          <mat-icon>assignment_ind</mat-icon>
+          <span>Client ID: {{ currentClient?.clientId }}</span>
+        </div>
+      </div>
+
+      <div class="status-badge" [class.active]="currentClient?.status === 'ACTIVE'">
+        Status : {{ currentClient?.status | titlecase }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs">
+    <div class="tab-item" *ngFor="let tab of tabs" [class.active]="activeTab === tab" (click)="setActiveTab(tab)">
+      <mat-icon *ngIf="tab === 'Aperçu'">dashboard</mat-icon>
+      <mat-icon *ngIf="tab === 'Acheter'">link</mat-icon> <!-- Icon approximation -->
+      <mat-icon *ngIf="tab === 'Transférer'">swap_horiz</mat-icon>
+      <mat-icon *ngIf="tab === 'Convertir'">swap_vert</mat-icon>
+      <mat-icon *ngIf="tab === 'Historique'">history</mat-icon>
+      <span>{{ tab }}</span>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="dashboard-content" *ngIf="activeTab === 'Aperçu'">
+
+    <!-- Total Value Card -->
+    <div class="total-value-card">
+      <div class="card-header">
+        <h3>Valeur Totale du Portefeuille</h3>
+        <p>Toutes vos crypto-monnaies</p>
+      </div>
+      <div class="value-display">
+        {{ portfolioValue | number:'1.2-2' }} MAD
+      </div>
+    </div>
+
+    <!-- Crypto Assets Grid -->
+    <div class="crypto-grid">
+      <div class="crypto-card" *ngFor="let asset of cryptoAssets">
+
+        <!-- Card Header: Icon, Name, Symbol, Change -->
+        <div class="card-top">
+          <div class="asset-info">
+            <div class="asset-icon" [style.color]="asset.iconColor" [style.background-color]="asset.iconColor + '20'">
+              <mat-icon>{{ asset.icon }}</mat-icon>
+            </div>
+            <div class="asset-names">
+              <h4>{{ asset.name }}</h4>
+              <span class="symbol">{{ asset.symbol }}</span>
+            </div>
+          </div>
+
+          <div class="asset-change" [class.positive]="asset.change >= 0" [class.negative]="asset.change < 0">
+            <mat-icon *ngIf="asset.change >= 0">trending_up</mat-icon>
+            <mat-icon *ngIf="asset.change < 0">trending_down</mat-icon>
+            <span>{{ asset.change | number:'1.2-2' }}%</span>
+          </div>
+        </div>
+
+        <!-- Price Section -->
+        <div class="price-section">
+          <div class="main-price">{{ asset.price | number:'1.2-2' }} MAD</div>
+          <span class="label">Prix actuel</span>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Balance Section -->
+        <div class="balance-section">
+          <span class="label">Votre solde</span>
+          <div class="crypto-balance">{{ asset.balanceCrypto | number:'1.6-6' }} {{ asset.symbol }}</div>
+          <div class="fiat-balance">≈ {{ asset.balanceMAD | number:'1.2-2' }} MAD</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Buy Crypto Content -->
+  <div class="buy-crypto-content" *ngIf="activeTab === 'Acheter'">
+    <div class="buy-card">
+      <div class="card-header">
+        <mat-icon>shopping_cart</mat-icon>
+        <div class="header-text">
+          <h3>Acheter des Crypto-monnaies</h3>
+          <p>Achetez des Bitcoin ou Ethereum avec des MAD</p>
+        </div>
+      </div>
+
+      <div class="form-container">
+        <!-- Crypto Selection -->
+        <label>Crypto-monnaie</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-select [(ngModel)]="selectedCrypto">
+            <mat-select-trigger>
+              {{ selectedCrypto.name }} ({{ selectedCrypto.symbol }})
+            </mat-select-trigger>
+            <mat-option *ngFor="let crypto of cryptosList" [value]="crypto">
+              {{ crypto.name }} ({{ crypto.symbol }})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Amount Input -->
+        <label>Montant (MAD)</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput type="number" [(ngModel)]="buyAmount" placeholder="0.00">
+        </mat-form-field>
+        <span class="helper-text">Entrez le montant en dirhams marocains (MAD)</span>
+
+        <!-- Action Button -->
+        <button mat-raised-button color="primary" class="btn-buy">
+          Acheter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transfer Crypto Content -->
+  <div class="transfer-crypto-content" *ngIf="activeTab === 'Transférer'">
+    <div class="transfer-card">
+      <div class="card-header">
+        <mat-icon>send</mat-icon>
+        <div class="header-text">
+          <h3>Transférer des Crypto-monnaies</h3>
+          <p>Envoyez des cryptos à un autre utilisateur</p>
+        </div>
+      </div>
+
+      <div class="form-container">
+        <!-- Recipient ID -->
+        <label>ID du destinataire</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput type="text" [(ngModel)]="transferRecipientId" placeholder="user123">
+        </mat-form-field>
+        <span class="helper-text">L'identifiant unique du destinataire</span>
+
+        <!-- Crypto Selection -->
+        <label>Crypto-monnaie</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-select [(ngModel)]="selectedTransferCrypto">
+            <mat-select-trigger>
+              {{ selectedTransferCrypto.name }} ({{ selectedTransferCrypto.symbol }})
+            </mat-select-trigger>
+            <mat-option *ngFor="let crypto of cryptosList" [value]="crypto">
+              {{ crypto.name }} ({{ crypto.symbol }})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Amount Input -->
+        <label>Montant</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput type="number" [(ngModel)]="transferAmount" placeholder="0.00">
+        </mat-form-field>
+        <span class="helper-text">Montant en {{ selectedTransferCrypto.symbol }}</span>
+
+        <!-- Action Button -->
+        <button mat-raised-button color="primary" class="btn-transfer">
+          Envoyer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Convert Crypto Content -->
+  <div class="convert-crypto-content" *ngIf="activeTab === 'Convertir'">
+    <div class="convert-card">
+      <div class="card-header">
+        <mat-icon>swap_vert</mat-icon>
+        <div class="header-text">
+          <h3>Convertir en MAD</h3>
+          <p>Convertissez vos crypto-monnaies en dirhams marocains</p>
+        </div>
+      </div>
+
+      <div class="form-container">
+        <!-- Crypto Selection -->
+        <label>Crypto-monnaie</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-select [(ngModel)]="selectedConvertCrypto">
+            <mat-select-trigger>
+              {{ selectedConvertCrypto.name }} ({{ selectedConvertCrypto.symbol }})
+            </mat-select-trigger>
+            <mat-option *ngFor="let crypto of cryptosList" [value]="crypto">
+              {{ crypto.name }} ({{ crypto.symbol }})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Amount Input -->
+        <label>Montant</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput type="number" [(ngModel)]="convertAmount" placeholder="0.00">
+        </mat-form-field>
+        <span class="helper-text">Montant en {{ selectedConvertCrypto.symbol }} à convertir</span>
+
+        <!-- Estimate Card -->
+        <div class="estimate-card">
+          <div class="estimate-label">Montant estimé</div>
+          <div class="estimate-amount">~ {{ estimatedConvertTotal | number:'1.2-2' }} MAD</div>
+          <div class="estimate-note">Le taux de change sera appliqué au moment de la conversion</div>
+        </div>
+
+        <!-- Action Button -->
+        <button mat-raised-button color="primary" class="btn-convert">
+          Convertir maintenant
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

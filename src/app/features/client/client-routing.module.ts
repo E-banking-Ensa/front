@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { ClientDashboardComponent } from './dashboard/dashboard.component';
 import { TransfertMoneyComponent } from './transfert-money/transfert-money.component';
 import { MobileRechargeComponent } from './mobile-recharge/mobile-recharge.component';
-import { CryptoWalletComponent } from './crypto-wallet/crypto-wallet.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 
 const routes: Routes = [
@@ -25,8 +24,8 @@ const routes: Routes = [
   },
   {
     path: 'crypto-wallet',
-    loadComponent: () => import('./crypto-wallet/crypto-wallet.component')
-      .then(m => m.CryptoWalletComponent)
+    loadChildren: () => import('./crypto-wallet/crypto-wallet.module')
+      .then(m => m.CryptoWalletModule)
   },
   {
     path: 'my-profile',
@@ -44,4 +43,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ClientRoutingModule {}
+export class ClientRoutingModule { }
