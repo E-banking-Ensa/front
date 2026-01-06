@@ -1,3 +1,227 @@
-<h2>{{ title }}</h2>
-<p>Nom d’utilisateur : {{ username }}</p>
-<p>Email : {{ email }}</p>
+<!--
+  ═══════════════════════════════════════════════════════════════════════════════
+  MY PROFILE - Template Principal
+  
+  Affiche et permet d'éditer les informations du profil du client
+  ═══════════════════════════════════════════════════════════════════════════════
+-->
+
+<div class="my-profile-container">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- EN-TÊTE -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <div class="profile-header">
+    <h1>Mon Profil</h1>
+    <p>Gérez vos informations personnelles et votre compte</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- CHARGEMENT -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement de votre profil...</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- CONTENU PRINCIPAL -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <div *ngIf="!isLoading && client" class="profile-content">
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: INFORMATIONS PERSONNELLES -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <mat-card class="profile-card personal-info">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>person</mat-icon>
+          Informations Personnelles
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="form-grid">
+
+          <!-- Prénom -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Prénom</mat-label>
+            <input matInput 
+                   [value]="client.firstName"
+                   [(ngModel)]="editForm.firstName"
+                   [disabled]="!isEditing"
+                   placeholder="Votre prénom">
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+
+          <!-- Nom -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Nom</mat-label>
+            <input matInput 
+                   [value]="client.lastName"
+                   [(ngModel)]="editForm.lastName"
+                   [disabled]="!isEditing"
+                   placeholder="Votre nom">
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+
+          <!-- Nom d'utilisateur -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Nom d'utilisateur</mat-label>
+            <input matInput 
+                   [value]="client.username"
+                   [disabled]="true"
+                   placeholder="Nom d'utilisateur">
+            <mat-icon matPrefix>account_circle</mat-icon>
+          </mat-form-field>
+
+          <!-- Email -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Email</mat-label>
+            <input matInput 
+                   type="email"
+                   [value]="client.email"
+                   [(ngModel)]="editForm.email"
+                   [disabled]="!isEditing"
+                   placeholder="Votre email">
+            <mat-icon matPrefix>email</mat-icon>
+          </mat-form-field>
+
+          <!-- Numéro de téléphone -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Numéro de Téléphone</mat-label>
+            <input matInput 
+                   [value]="client.phoneNumber"
+                   [(ngModel)]="editForm.phoneNumber"
+                   [disabled]="!isEditing"
+                   placeholder="Votre numéro">
+            <mat-icon matPrefix>phone</mat-icon>
+          </mat-form-field>
+
+          <!-- Adresse -->
+          <mat-form-field appearance="outline" class="form-field full-width">
+            <mat-label>Adresse</mat-label>
+            <input matInput 
+                   [value]="client.adresse"
+                   [(ngModel)]="editForm.adresse"
+                   [disabled]="!isEditing"
+                   placeholder="Votre adresse">
+            <mat-icon matPrefix>location_on</mat-icon>
+          </mat-form-field>
+
+        </div>
+      </mat-card-content>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-actions>
+        <button *ngIf="!isEditing" mat-raised-button color="primary" (click)="startEditing()">
+          <mat-icon>edit</mat-icon>
+          Modifier
+        </button>
+
+        <div *ngIf="isEditing" class="action-buttons">
+          <button mat-stroked-button (click)="cancelEditing()">
+            <mat-icon>close</mat-icon>
+            Annuler
+          </button>
+          <button mat-raised-button color="primary" (click)="saveProfile()">
+            <mat-icon>save</mat-icon>
+            Enregistrer
+          </button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: STATUT COMPTE -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <mat-card class="profile-card status-info">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>verified_user</mat-icon>
+          Statut du Compte
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="status-grid">
+
+          <!-- Statut KYC -->
+          <div class="status-item">
+            <div class="status-label">Statut KYC</div>
+            <mat-chip [color]="getKycStatusColor(client.kycStatus)" selected class="status-chip">
+              {{ getKycStatusLabel(client.kycStatus) }}
+            </mat-chip>
+          </div>
+
+          <!-- Statut Compte -->
+          <div class="status-item">
+            <div class="status-label">Statut du Compte</div>
+            <mat-chip [color]="getStatusColor(client.status)" selected class="status-chip">
+              {{ getStatusLabel(client.status) }}
+            </mat-chip>
+          </div>
+
+          <!-- Date de création -->
+          <div class="status-item">
+            <div class="status-label">Compte créé le</div>
+            <div class="status-value">
+              <mat-icon>calendar_today</mat-icon>
+              {{ formatDate(client.createdAt) }}
+            </div>
+          </div>
+
+          <!-- ID Client -->
+          <div class="status-item">
+            <div class="status-label">ID Client</div>
+            <div class="status-value">
+              <mat-icon>fingerprint</mat-icon>
+              {{ client.clientId }}
+            </div>
+          </div>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: ACTIONS RAPIDES -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <mat-card class="profile-card quick-actions">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>flash_on</mat-icon>
+          Actions Rapides
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="action-grid">
+          <button mat-stroked-button color="primary" class="action-btn">
+            <mat-icon>vpn_key</mat-icon>
+            <span>Changer le Mot de Passe</span>
+          </button>
+
+          <button mat-stroked-button color="primary" class="action-btn">
+            <mat-icon>security</mat-icon>
+            <span>Authentification 2FA</span>
+          </button>
+
+          <button mat-stroked-button color="accent" class="action-btn">
+            <mat-icon>description</mat-icon>
+            <span>Documents KYC</span>
+          </button>
+
+          <button mat-stroked-button color="warn" class="action-btn">
+            <mat-icon>logout</mat-icon>
+            <span>Déconnexion</span>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+</div>
+

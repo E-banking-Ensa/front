@@ -9,7 +9,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AccountService } from '../../../core/services/account.service';
-import { AccountDTO } from '../../../core/models/AccountDTO ';
+import { AccountDTO } from '../../../core/models/AccountDTO';
 
 @Component({
   selector: 'app-accounts',

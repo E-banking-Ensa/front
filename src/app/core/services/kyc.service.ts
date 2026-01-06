@@ -27,11 +27,11 @@ export class KycService {
    * Upload un document KYC pour un utilisateur
    * POST /api/users/{userId}/kyc/documents?documentType={type}
    */
-  uploadKycDocument(userId: string, documentType: string, file: File): Observable<void> {
-    const formData = new FormData();
-    formData.append('file', file);
-    return this.http.post<void>(`${this.baseUrl}/${userId}/kyc/documents?documentType=${documentType}`, formData);
-  }
+  // uploadKycDocument(userId: string, documentType: string, file: File): Observable<void> {
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   return this.http.post<void>(`${this.baseUrl}/${userId}/kyc/documents?documentType=${documentType}`, formData);
+  // }
 
   /**
    * Valider un document KYC
@@ -48,4 +48,37 @@ export class KycService {
   rejectKycDocument(documentId: string, reason: string): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/kyc/documents/${documentId}/reject?reason=${encodeURIComponent(reason)}`, {});
   }
+
+  //receupere un tel ffichier ou bein dossier a partir de son path
+  getKycDocumentByPath(documentPath: string): Observable<KycDocumentResponseDto> {
+    return this.http.get<KycDocumentResponseDto>(`${this.baseUrl}/kyc/file/${documentPath}`);
+  }
+
+  /**
+   * Télécharge un document KYC
+   * Retourne le fichier en blob pour téléchargement
+   */
+  downloadKycDocument(documentPath: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/kyc/download/${documentPath}`, {
+      responseType: 'blob'
+    });
+  }
+
+  /**
+   * Visualise un document KYC
+   * Retourne l'URL pour visualiser le document
+   */
+  viewKycDocument(documentPath: string): string {
+    return `${this.baseUrl}/kyc/view/${documentPath}`;
+  }
+
+  //maintennat je vais faire une methode pour uplaoder un tel documenet vers backend par client , KYC
+  uploadKycDocument(userId: string, documentType: string, file: File): Observable<void> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<void>(
+        `${this.baseUrl}/${userId}/kyc/documents?documentType=${documentType}`, 
+        formData
+    );
+}
 }

@@ -32,6 +32,11 @@ const routes: Routes = [
     path: 'my-profile',
     loadComponent: () => import('./my-profile/my-profile.component')
       .then(m => m.MyProfileComponent)
+  },
+  {
+    path: 'kyc-documents',
+    loadComponent: () => import('./client-kyc/client-kyc.component')
+      .then(m => m.ClientKycComponent)
   }
 ];
 

@@ -1,19 +1,19 @@
 <!--
   ═══════════════════════════════════════════════════════════════════════════════
-  KYC VALIDATION - Template Principal
+  CLIENT KYC DOCUMENTS - Template Principal
   
-  Interface pour valider les documents KYC des clients
+  Interface pour gérer les documents KYC du client
   ═══════════════════════════════════════════════════════════════════════════════
 -->
 
-<div class="kyc-validation-container">
+<div class="client-kyc-container">
 
   <!-- ═══════════════════════════════════════════════════════════════════════════ -->
   <!-- EN-TÊTE -->
   <!-- ═══════════════════════════════════════════════════════════════════════════ -->
   <div class="kyc-header">
-    <h1>Validation Documents KYC</h1>
-    <p>Validez ou rejetez les documents d'identité soumis par les clients</p>
+    <h1>Mes Documents KYC</h1>
+    <p>Gérez vos documents d'identité et de vérification</p>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════ -->
@@ -28,8 +28,8 @@
       <div class="stat-value">{{ statistics.pending }}</div>
       <div class="stat-label">En Attente</div>
     </mat-card>
-    <mat-card class="stat-card validated">
-      <div class="stat-value">{{ statistics.validated }}</div>
+    <mat-card class="stat-card verified">
+      <div class="stat-value">{{ statistics.verified }}</div>
       <div class="stat-label">Validés</div>
     </mat-card>
     <mat-card class="stat-card rejected">
@@ -39,91 +39,43 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════ -->
-  <!-- FILTRES -->
+  <!-- BOUTON AJOUTER DOCUMENT -->
   <!-- ═══════════════════════════════════════════════════════════════════════════ -->
-  <mat-card class="filters-card">
-    <div class="filters-content">
-      <h2>Filtres</h2>
-      
-      <div class="filters-grid">
-        <!-- Filtre Statut -->
-        <mat-form-field appearance="outline" class="filter-field">
-          <mat-label>Statut</mat-label>
-          <mat-select [(ngModel)]="filterCriteria.status" (change)="applyFilters()">
-            <mat-option value="">Tous</mat-option>
-            <mat-option value="PENDING">En attente</mat-option>
-            <mat-option value="VERIFIED">Validés</mat-option>
-            <mat-option value="REJECTED">Rejetés</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <!-- Filtre Type de Document -->
-        <mat-form-field appearance="outline" class="filter-field">
-          <mat-label>Type de Document</mat-label>
-          <mat-select [(ngModel)]="filterCriteria.documentType" (change)="applyFilters()">
-            <mat-option value="">Tous</mat-option>
-            <mat-option value="ID_CARD">Carte d'identité</mat-option>
-            <mat-option value="PASSPORT">Passeport</mat-option>
-            <mat-option value="PROOF_OF_ADDRESS">Justificatif d'adresse</mat-option>
-            <mat-option value="BANK_STATEMENT">Relevé bancaire</mat-option>
-            <mat-option value="INCOME_PROOF">Justificatif de revenu</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <!-- Filtre Nom Client -->
-        <mat-form-field appearance="outline" class="filter-field">
-          <mat-label>Nom du Client</mat-label>
-          <input matInput 
-                 [(ngModel)]="filterCriteria.clientName"
-                 (keyup)="applyFilters()"
-                 placeholder="Rechercher par nom...">
-        </mat-form-field>
-
-        <!-- Bouton Réinitialiser -->
-        <button mat-stroked-button color="primary" (click)="resetFilters()" class="reset-btn">
-          <mat-icon>refresh</mat-icon>
-          Réinitialiser
-        </button>
-      </div>
-    </div>
-  </mat-card>
+  <div class="action-bar">
+    <button mat-raised-button color="primary" (click)="openUploadDialog()">
+      <mat-icon>add_circle</mat-icon>
+      Ajouter un Document KYC
+    </button>
+  </div>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════ -->
   <!-- TABLEAU DE DOCUMENTS -->
   <!-- ═══════════════════════════════════════════════════════════════════════════ -->
   <mat-card class="documents-card">
-    <h2>Documents à Valider</h2>
+    <h2>Mes Documents</h2>
 
     <div *ngIf="isLoading" class="loading-container">
-      <div class="spinner"></div>
+      <mat-spinner diameter="50"></mat-spinner>
       <p>Chargement des documents...</p>
     </div>
 
     <div *ngIf="!isLoading && filteredDocuments.length === 0" class="empty-state">
       <mat-icon>inbox</mat-icon>
-      <h3>Aucun document trouvé</h3>
-      <p>Tous les documents sont validés ou il n'y a aucun document à afficher</p>
+      <h3>Aucun document uploadé</h3>
+      <p>Cliquez sur le bouton ci-dessus pour ajouter votre premier document</p>
     </div>
 
     <div *ngIf="!isLoading && filteredDocuments.length > 0" class="table-container">
       <table mat-table [dataSource]="filteredDocuments" class="documents-table">
         
-        <!-- Colonne: Nom Client -->
-        <ng-container matColumnDef="clientName">
-          <th mat-header-cell *matHeaderCellDef>Nom du Client</th>
-          <td mat-cell *matCellDef="let element" class="cell-client">
-            <div class="client-info">
-              <mat-icon>person</mat-icon>
-              <span>{{ element.clientName }}</span>
-            </div>
-          </td>
-        </ng-container>
-
         <!-- Colonne: Type de Document -->
         <ng-container matColumnDef="documentType">
           <th mat-header-cell *matHeaderCellDef>Type de Document</th>
-          <td mat-cell *matCellDef="let element">
-            {{ getDocumentTypeLabel(element.documentType) }}
+          <td mat-cell *matCellDef="let element" class="cell-type">
+            <div class="document-type-badge">
+              <mat-icon>description</mat-icon>
+              <span>{{ getDocumentTypeLabel(element.documentType) }}</span>
+            </div>
           </td>
         </ng-container>
 
@@ -150,27 +102,12 @@
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let element" class="actions-cell">
             <button mat-icon-button 
-                    color="primary"
-                    [disabled]="element.status !== 'PENDING'"
-                    (click)="validateDocument(element)"
-                    matTooltip="Valider ce document">
-              <mat-icon>check_circle</mat-icon>
-            </button>
-            <button mat-icon-button 
-                    color="warn"
-                    [disabled]="element.status !== 'PENDING'"
-                    (click)="rejectDocument(element)"
-                    matTooltip="Rejeter ce document">
-              <mat-icon>cancel</mat-icon>
-            </button>
-            <button mat-icon-button 
                     color="accent"
                     (click)="downloadKycDocument(element)"
                     matTooltip="Télécharger le document">
               <mat-icon>download</mat-icon>
             </button>
             <button mat-icon-button 
-                    color="info"
                     (click)="viewKycDocument(element)"
                     matTooltip="Visualiser le document">
               <mat-icon>visibility</mat-icon>
@@ -183,7 +120,7 @@
         <!-- Lignes du tableau -->
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
             [class.pending-row]="row.status === 'PENDING'"
-            [class.validated-row]="row.status === 'VERIFIED'"
+            [class.verified-row]="row.status === 'VERIFIED'"
             [class.rejected-row]="row.status === 'REJECTED'"></tr>
       </table>
     </div>

@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AgentMockDataService } from '../../../core/services/agent-mock-data.service';
+import { KycService } from '../../../core/services/kyc.service';
 import { ClientDto } from '../../../core/models/ClientDto';
 import { KycDocumentResponseDto } from '../../../core/models/KycDocumentResponseDto';
 
@@ -94,6 +95,7 @@ export class KycValidationComponent implements OnInit {
 
   constructor(
     private mockDataService: AgentMockDataService,
+    private kycService: KycService,
     private dialog: MatDialog
   ) {}
 
@@ -327,5 +329,60 @@ export class KycValidationComponent implements OnInit {
     };
     this.applyFilters();
     console.log('%c🔄 Filtres réinitialisés', 'color: blue;');
+  }
+
+  /**
+   * Télécharge un document KYC
+   * @param document Le document à télécharger
+   */
+  downloadKycDocument(doc: KycDocumentResponseDto & { clientId: string; clientName: string }): void {
+    if (!doc.pathToDocument) {
+      alert('❌ Aucun chemin de fichier disponible');
+      return;
+    }
+
+    console.log('%c📥 Téléchargement du document:', 'color: blue;', doc.pathToDocument);
+    
+    this.kycService.downloadKycDocument(doc.pathToDocument).subscribe({
+      next: (blob: Blob) => {
+        // Créer un lien de téléchargement
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${doc.documentType}_${doc.clientName}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        link.remove();
+        
+        console.log('%c✅ Document téléchargé avec succès!', 'color: green;');
+        alert('✅ Document téléchargé avec succès!');
+      },
+      error: (err: any) => {
+        console.error('%c❌ Erreur lors du téléchargement:', 'color: red;', err);
+        alert('❌ Erreur lors du téléchargement du document');
+      }
+    });
+  }
+
+  /**
+   * Visualise un document KYC dans une nouvelle fenêtre
+   * @param document Le document à visualiser
+   */
+  viewKycDocument(doc: KycDocumentResponseDto & { clientId: string; clientName: string }): void {
+    if (!doc.pathToDocument) {
+      alert('❌ Aucun chemin de fichier disponible');
+      return;
+    }
+
+    console.log('%c👁️ Visualisation du document:', 'color: blue;', doc.pathToDocument);
+    
+    // Obtenir l'URL de visualisation du service
+    const viewUrl = this.kycService.viewKycDocument(doc.pathToDocument);
+    
+    // Ouvrir dans une nouvelle fenêtre
+    window.open(viewUrl, '_blank', 'width=1000,height=800');
+    
+    console.log('%c✅ Document ouvert en visualisation', 'color: green;');
   }
 }

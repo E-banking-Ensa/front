@@ -1,0 +1,66 @@
+<!--
+  ═══════════════════════════════════════════════════════════════════════════════
+  KYC UPLOAD DIALOG - Formulaire d'upload
+  ═══════════════════════════════════════════════════════════════════════════════
+-->
+
+<div class="kyc-upload-dialog">
+
+  <!-- En-tête du dialogue -->
+  <div class="dialog-header">
+    <h2>Ajouter un Document KYC</h2>
+    <p>Sélectionnez le type de document et uploadez le fichier</p>
+  </div>
+
+  <!-- Contenu du formulaire -->
+  <div class="dialog-content">
+
+    <!-- Sélection du type de document -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Type de Document</mat-label>
+      <mat-select [(ngModel)]="selectedDocumentType">
+        <mat-option *ngFor="let docType of documentTypes" [value]="docType.value">
+          {{ docType.label }}
+        </mat-option>
+      </mat-select>
+      <mat-hint>Sélectionnez le type de document à uploader</mat-hint>
+    </mat-form-field>
+
+    <!-- Upload du fichier -->
+    <div class="file-upload-section">
+      <label for="fileInput" class="file-input-label">
+        <mat-icon>cloud_upload</mat-icon>
+        <span>{{ selectedFile ? selectedFile.name : 'Cliquez pour sélectionner un fichier' }}</span>
+      </label>
+      <input 
+        #fileInput
+        id="fileInput"
+        type="file" 
+        hidden 
+        (change)="onFileSelected($event)"
+        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+    </div>
+
+    <!-- Informations sur le fichier -->
+    <div *ngIf="selectedFile" class="file-info">
+      <mat-icon>check_circle</mat-icon>
+      <div>
+        <div class="file-name">{{ selectedFile.name }}</div>
+        <div class="file-size">Taille: {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Actions du dialogue -->
+  <div class="dialog-actions">
+    <button mat-stroked-button (click)="onCancel()">
+      Annuler
+    </button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!selectedDocumentType || !selectedFile">
+      <mat-icon>upload_file</mat-icon>
+      Uploader
+    </button>
+  </div>
+
+</div>

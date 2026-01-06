@@ -31,6 +31,7 @@ interface MenuItem {
 export class SidebarClientComponent {
   menuItems: MenuItem[] = [
     { icon: 'dashboard', label: 'Dashboard', route: '/client/dashboard' },
+    { icon: 'card_membership', label: 'Documents KYC', route: '/client/kyc-documents' },
     { icon: 'sync_alt', label: 'Transfert Mony', route: '/client/transfert-money' },
     { icon: 'smartphone', label: 'Mobile Recharge', route: '/client/mobile-recharge' },
     { icon: 'account_balance_wallet', label: 'Crypto Wallet', route: '/client/crypto-wallet' },
