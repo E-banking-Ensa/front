@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ConsentTypeDto} from '../models/ConsentTypeDto';
+import { environment } from '../../../environments/environment';
+import { ConsentTypeDto } from '../models/ConsentTypeDto';
 import { ConsentDto } from '../models/consentDto';
 import { ConsentTypeRequest } from '../models/ConsentTypeRequest';
 
@@ -10,37 +11,75 @@ import { ConsentTypeRequest } from '../models/ConsentTypeRequest';
 })
 export class ConsentService {
 
-  private baseUrl = 'http://localhost:8080/api/v1/users/admin/consent-types';
+  private baseUrl = `${environment.apiUrl}/api/users`;
 
   constructor(private http: HttpClient) { }
 
-  // 1️⃣ Récupérer tous les types de consentement
+  // ===== User Consents =====
+
+  /**
+   * Récupérer les consentements d'un utilisateur
+   * GET /api/users/{userId}/consents
+   */
+  getUserConsents(userId: string): Observable<ConsentDto[]> {
+    return this.http.get<ConsentDto[]>(`${this.baseUrl}/${userId}/consents`);
+  }
+
+  /**
+   * Ajouter un consentement pour un utilisateur
+   * POST /api/users/{userId}/consents?consentType={type}
+   */
+  addUserConsent(userId: string, consentType: string): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/${userId}/consents?consentType=${consentType}`, {});
+  }
+
+  /**
+   * Révoquer un consentement pour un utilisateur
+   * DELETE /api/users/{userId}/consents/{consentType}
+   */
+  revokeUserConsent(userId: string, consentType: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${userId}/consents/${consentType}`);
+  }
+
+  // ===== Admin Consent Types Management =====
+
+  /**
+   * Récupérer tous les types de consentement
+   * GET /api/users/admin/consent-types
+   */
   getAllConsentTypes(): Observable<ConsentTypeDto[]> {
-    return this.http.get<ConsentTypeDto[]>(this.baseUrl);
+    return this.http.get<ConsentTypeDto[]>(`${this.baseUrl}/admin/consent-types`);
   }
 
-  // 2️⃣ Créer un nouveau type de consentement
+  /**
+   * Créer un nouveau type de consentement
+   * POST /api/users/admin/consent-types
+   */
   createConsentType(request: ConsentTypeRequest): Observable<ConsentTypeDto> {
-    return this.http.post<ConsentTypeDto>(this.baseUrl, request);
+    return this.http.post<ConsentTypeDto>(`${this.baseUrl}/admin/consent-types`, request);
   }
 
-  // 3️⃣ Activer un type de consentement
+  /**
+   * Activer un type de consentement
+   * PUT /api/users/admin/consent-types/{typeId}/activate
+   */
   activateConsentType(typeId: string): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${typeId}/activate`, null);
+    return this.http.put<void>(`${this.baseUrl}/admin/consent-types/${typeId}/activate`, {});
   }
 
-  // 4️⃣ Désactiver un type de consentement
+  /**
+   * Désactiver un type de consentement
+   * PUT /api/users/admin/consent-types/{typeId}/deactivate
+   */
   deactivateConsentType(typeId: string): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${typeId}/deactivate`, null);
+    return this.http.put<void>(`${this.baseUrl}/admin/consent-types/${typeId}/deactivate`, {});
   }
 
-  // 5️⃣ Supprimer un type de consentement
+  /**
+   * Supprimer un type de consentement
+   * DELETE /api/users/admin/consent-types/{typeId}
+   */
   deleteConsentType(typeId: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${typeId}`);
-  }
-
-  // 6️⃣ Récupérer les consentements d'un client, cela ets affiche chez agent
-  getClientConsents(clientId: string): Observable<ConsentDto[]> {
-    return this.http.get<ConsentDto[]>(`${this.baseUrl}/clients/${clientId}/consents`);
+    return this.http.delete<void>(`${this.baseUrl}/admin/consent-types/${typeId}`);
   }
 }
